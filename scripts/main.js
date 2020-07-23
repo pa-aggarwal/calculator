@@ -8,31 +8,34 @@
     const operations = [
         {
             operator: '+',
+            operatorCode: 43,
             operation: (num1, num2) => num1 + num2
         },
         {
             operator: '-',
+            operatorCode: 8722,
             operation: (num1, num2) => num1 - num2
         },
         {
             operator: '*',
+            operatorCode: 215,
             operation: (num1, num2) => num1 * num2
         },
         {
             operator: '/',
+            operatorCode: 247,
             operation: (num1, num2) => num1 / num2
         }
     ];
 
     /**
      * Return the result of a mathematical operation.
-     * @param  {String} operator - Operation to perform i.e '+', '/', etc.
-     * @param  {Number} numX     - First operand in operation.
-     * @param  {Number} numY     - Second operand in operation.
-     * @return {Number}          - Result of math operation.
+     * @param  {string} operator - Operation to perform i.e '+', '/', etc.
+     * @param  {number} numX     - First operand in operation.
+     * @param  {number} numY     - Second operand in operation.
+     * @return {number}          - Result of math operation.
      */
     function getCalculationResult(operator, num1, num2) {
-        // Assign appropriate object based on operator from array.
         const opObj = operations.find(obj => (obj.operator === operator));
         return opObj.operation(num1, num2);
     }
@@ -77,15 +80,52 @@
     }
 
     /**
+     * Return the symbol equivalent of an operator's HTML entity code.
+     * @param  {number} entityCode - Operator's HTML code i.e 43 (+).
+     * @return {string}            - Operator as a symbol ('*', '/', etc.).
+     */
+    function getOperator(entityCode) {
+        const opObj = operations.find(obj => (obj.operatorCode === entityCode));
+        return opObj.operator;
+    }
+
+    /**
+     * Add the operator entered into the current calculation being processed.
+     * @param {string} newOperator - Operator symbol entered ('*', '/', etc.).
+     */
+    function handleOperatorClick(newOperator) {
+        const lastItemEntered = calculationArr[calculationArr.length - 1];
+
+        if (typeof lastItemEntered === 'number') {
+            calculationArr.push(newOperator);
+        } else if (isOperator(lastItemEntered)) {
+            // Replace previous operator with newOperator.
+            calculationArr.pop();
+            calculationArr.push(newOperator);
+        }
+    }
+
+    /**
      * Event handler for `click` events within the calculator device.
      * @param {Object} event - The MouseEvent triggering this function.
      */
     function handleClickEvent(event) {
         const elementClasses = event.target.classList;
+        const length = calculationArr.length;
 
         if (elementClasses.contains('number-button')) {
             handleNumberClick(parseInt(event.target.innerText));
             // TODO: Update display.
+        } else if (elementClasses.contains('operator-button') && length) {
+            const newOperatorUnicode = event.target.innerHTML.codePointAt(0);
+            handleOperatorClick(getOperator(newOperatorUnicode));
+            // TODO: Update display.
+        } else if (elementClasses.contains('equal-button')) {
+            // TODO: Evaluate what's in the calculation array.
+        } else if (elementClasses.contains('clear-button')) {
+            // TODO: Clear the calculation array.
+            // TODO: Clear display.
+            // TODO: Clear calculation result.
         }
     }
 
