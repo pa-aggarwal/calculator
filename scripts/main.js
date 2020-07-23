@@ -39,14 +39,14 @@
      * @param  {number} numY     - Second operand in operation.
      * @return {number}          - Result of math operation.
      */
-    function getCalculationResult(operator, num1, num2) {
-        const opObj = operations.find(obj => (obj.operator === operator));
-        return opObj.operation(num1, num2);
+    function operate(operator, num1, num2) {
+        const object = operations.find(obj => (obj.operator === operator));
+        return object.operation(num1, num2);
     }
 
     /**
      * Return a boolean indicating if the provided item is an operator.
-     * @param  {(string|number)} item - An operator ('+', etc.) or number.
+     * @param  {(number|string)} item - An operator ('+', etc.) or number.
      * @return {boolean}              - true if item is operator, else false.
      */
     function isOperator(item) {
@@ -84,13 +84,13 @@
     }
 
     /**
-     * Return the symbol equivalent of an operator's HTML entity code.
-     * @param  {number} entityCode - Operator's HTML code i.e 43 (+).
+     * Return the symbol equivalent of an operator's HTML code.
+     * @param  {number} code - Operator's HTML code i.e 43 (+).
      * @return {string}            - Operator as a symbol ('*', '/', etc.).
      */
-    function getOperator(entityCode) {
-        const opObj = operations.find(obj => (obj.operatorCode === entityCode));
-        return opObj.operator;
+    function getOperator(code) {
+        const object = operations.find(obj => (obj.operatorCode === code));
+        return object.operator;
     }
 
     /**
@@ -194,6 +194,14 @@
     }
 
     /**
+     * Empty the contents of a provided HTML element using the entity '&nbsp;'.
+     * @param {Object} element - An element object in the DOM.
+     */
+    function clearElementText(element) {
+        element.innerHTML = '&nbsp;';
+    }
+
+    /**
      * Event handler for `click` events within the calculator device.
      * @param {Object} event - The MouseEvent triggering this function.
      */
@@ -212,9 +220,9 @@
             updateResult(evaluateCalculation());
             calculationArr = [];
         } else if (elementClasses.contains('clear-button')) {
-            // TODO: Clear the calculation array.
-            // TODO: Clear display.
-            // TODO: Clear calculation result.
+            calculationArr = [];
+            clearElementText(document.getElementById('calculation__display'));
+            clearElementText(document.getElementById('calculation__result'));
         }
     }
 
