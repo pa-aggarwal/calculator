@@ -9,21 +9,25 @@
         {
             operator: '+',
             operatorCode: 43,
+            operatorRegExp: /\+/g,
             operation: (num1, num2) => num1 + num2
         },
         {
             operator: '-',
             operatorCode: 8722,
+            operatorRegExp: /-/g,
             operation: (num1, num2) => num1 - num2
         },
         {
             operator: '*',
             operatorCode: 215,
+            operatorRegExp: /\*/g,
             operation: (num1, num2) => num1 * num2
         },
         {
             operator: '/',
             operatorCode: 247,
+            operatorRegExp: /\//g,
             operation: (num1, num2) => num1 / num2
         }
     ];
@@ -106,6 +110,33 @@
     }
 
     /**
+     * Return an updated string with any operator symbols present converted
+     * into their equivalent HTML code values.
+     * @param  {string} string - May contain operators ('+', etc.) to change.
+     * @return {string}        - Updated string with operators replaced.
+     */
+    function mapOperatorToUnicode(string) {
+        if (string !== '') {
+            operations.forEach(operation => {
+                // Destructure so we don't have to access by dot notation.
+                const {operator, operatorCode, operatorRegExp} = operation;
+                let operatorUnicode = `&#${operatorCode};`;
+                string = string.replace(operatorRegExp, operatorUnicode);
+            });
+        }
+        return string;
+    }
+
+    /**
+     * Set the calculator's display to numbers/operators as they're entered.
+     */
+    function updateDisplay() {
+        const displayElement = document.getElementById('calculation__display');
+        let calculationStr = mapOperatorToUnicode(calculationArr.join(' '));
+        displayElement.innerHTML = calculationStr;
+    }
+
+    /**
      * Event handler for `click` events within the calculator device.
      * @param {Object} event - The MouseEvent triggering this function.
      */
@@ -115,13 +146,12 @@
 
         if (elementClasses.contains('number-button')) {
             handleNumberClick(parseInt(event.target.innerText));
-            // TODO: Update display.
+            updateDisplay();
         } else if (elementClasses.contains('operator-button') && length) {
             const newOperatorUnicode = event.target.innerHTML.codePointAt(0);
             handleOperatorClick(getOperator(newOperatorUnicode));
-            // TODO: Update display.
-        } else if (elementClasses.contains('equal-button')) {
-            // TODO: Evaluate what's in the calculation array.
+            updateDisplay();
+        } else if (elementClasses.contains('equal-button') && length) {
         } else if (elementClasses.contains('clear-button')) {
             // TODO: Clear the calculation array.
             // TODO: Clear display.
