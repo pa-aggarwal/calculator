@@ -4,8 +4,20 @@
 
     const calculatorElement = document.querySelector('.calculator');
     // Store numbers and operators inside calculation array.
-    const calculationArr = [];
+    let calculationArr = [];
     const operations = [
+        {
+            operator: '/',
+            operatorCode: 247,
+            operatorRegExp: /\//g,
+            operation: (num1, num2) => num1 / num2
+        },
+        {
+            operator: '*',
+            operatorCode: 215,
+            operatorRegExp: /\*/g,
+            operation: (num1, num2) => num1 * num2
+        },
         {
             operator: '+',
             operatorCode: 43,
@@ -17,18 +29,6 @@
             operatorCode: 8722,
             operatorRegExp: /-/g,
             operation: (num1, num2) => num1 - num2
-        },
-        {
-            operator: '*',
-            operatorCode: 215,
-            operatorRegExp: /\*/g,
-            operation: (num1, num2) => num1 * num2
-        },
-        {
-            operator: '/',
-            operatorCode: 247,
-            operatorRegExp: /\//g,
-            operation: (num1, num2) => num1 / num2
         }
     ];
 
@@ -137,6 +137,63 @@
     }
 
     /**
+     * Evaluate a single operation in the current calculation being processed.
+     * @param {string} operator - A mathematical operator ('+', '/', etc).
+     */
+    function evaluateOperation(operator) {
+        let operatorIndex;
+        let itemsToRemove;
+        let operandOne;
+        let operandTwo;
+        let answer;
+
+        while (calculationArr.includes(operator)) {
+            operatorIndex = calculationArr.findIndex(item => item === operator);
+            operandOne = calculationArr[operatorIndex - 1];
+            // Check if second operand exists, else operand 1 equals operand 2.
+            if (operatorIndex === calculationArr.length - 1) {
+                operandTwo = operandOne;
+                itemsToRemove = 2;
+            } else {
+                operandTwo = calculationArr[operatorIndex + 1];
+                itemsToRemove = 3;
+            }
+            answer = operate(operator, operandOne, operandTwo);
+            // Check if operation returned a number.
+            if (!Number.isFinite(answer)) return 'Zero Division';
+            calculationArr.splice(operatorIndex - 1, itemsToRemove, answer);
+        }
+    }
+
+    /**
+     * Return the result of the calculation entered, or an error string for
+     * invalid calculations (i.e division by 0).
+     * @return {(number|string)} - Calculation's numerical result or 'ERROR'.
+     */
+    function evaluateCalculation() {
+        // Array only contains a number.
+        if (calculationArr.length === 1) return calculationArr[0];
+        // Evaluate each operation in order of BEDMAS.
+        for (let i = 0; i < operations.length; i++) {
+            const {operator} = operations[i];
+            if (evaluateOperation(operator) === 'Zero Division') {
+                return 'ERROR';
+            }
+        }
+        // Array contains 1 number after performing all operations.
+        return calculationArr[0];
+    }
+
+    /**
+     * Set the calculator's result box to the answer for the entered calulation.
+     * @param {(number|string)} calculationAnswer - Numerical result or 'ERROR'.
+     */
+    function updateResult(calculationAnswer) {
+        const resultElement = document.getElementById('calculation__result');
+        resultElement.innerText = calculationAnswer + '';
+    }
+
+    /**
      * Event handler for `click` events within the calculator device.
      * @param {Object} event - The MouseEvent triggering this function.
      */
@@ -152,6 +209,8 @@
             handleOperatorClick(getOperator(newOperatorUnicode));
             updateDisplay();
         } else if (elementClasses.contains('equal-button') && length) {
+            updateResult(evaluateCalculation());
+            calculationArr = [];
         } else if (elementClasses.contains('clear-button')) {
             // TODO: Clear the calculation array.
             // TODO: Clear display.
