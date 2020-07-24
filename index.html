@@ -17,32 +17,50 @@
             </div>
             <div class="container">
                 <div class="row">
+                    <!-- Button for getting previous calculation answer. -->
+                    <button class="answer-button" type="button" name="answer">ANS</button>
+                    <button class="reset-button" type="reset" name="clear">AC</button>
+                    <button class="undo-button" type="button" name="undo">C</button>
+                </div>
+                <div class="row">
+                    <!-- HTML entity for left paranthesis. -->
+                    <button class="operator-button" type="button" name="operator" value="left-bracket">&#40;</button>
+                    <!-- HTML entity for right paranthesis. -->
+                    <button class="operator-button" type="button" name="operator" value="right-bracket">&#41;</button>
+                    <button class="operator-button" type="button" name="operator" value="exponent">
+                        <var class="exponent-base">x<sup class="exponent-power">y</sup></var>
+                    </button>
+                    <!-- HTML entity for plus/minus sign. -->
+                    <button class="sign-button" type="button" name="sign">&#177;</button>
+                </div>
+                <div class="row">
                     <button class="number-button" type="button" name="number" value="7">7</button>
                     <button class="number-button" type="button" name="number" value="8">8</button>
                     <button class="number-button" type="button" name="number" value="9">9</button>
-                    <!-- HTML entity code is for divide symbol. -->
+                    <!-- HTML entity for divide symbol. -->
                     <button class="operator-button" type="button" name="operator" value="divide">&#247;</button>
                 </div>
                 <div class="row">
                     <button class="number-button" type="button" name="number" value="4">4</button>
                     <button class="number-button" type="button" name="number" value="5">5</button>
                     <button class="number-button" type="button" name="number" value="6">6</button>
-                    <!-- HTML entity code is for multiply symbol. -->
+                    <!-- HTML entity for multiply symbol. -->
                     <button class="operator-button" type="button" name="operator" value="multiply">&#215;</button>
                 </div>
                 <div class="row">
                     <button class="number-button" type="button" name="number" value="1">1</button>
                     <button class="number-button" type="button" name="number" value="2">2</button>
                     <button class="number-button" type="button" name="number" value="3">3</button>
-                    <!-- HTML entity code is for add symbol. -->
+                    <!-- HTML entity for add symbol. -->
                     <button class="operator-button" type="button" name="operator" value="add">&#43;</button>
                 </div>
                 <div class="row">
                     <button class="number-button" type="button" name="number" value="0">0</button>
-                    <button class="clear-button" type="reset" name="clear" value="true">AC</button>
-                    <!-- HTML entity code is for equal symbol. -->
-                    <button class="equal-button" type="button" name="equals" value="true">&#61;</button>
-                    <!-- HTML entity code is for subtract symbol. -->
+                    <!-- HTML entity for period symbol. -->
+                    <button class="decimal-button" type="button" name="decimal">&#46;</button>
+                    <!-- HTML entity for equal symbol. -->
+                    <button class="equal-button" type="button" name="equals">&#61;</button>
+                    <!-- HTML entity for subtract symbol. -->
                     <button class="operator-button" type="button" name="operator" value="subtract">&#8722;</button>
                 </div>
             </div>

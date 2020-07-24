@@ -159,7 +159,7 @@
                 itemsToRemove = 3;
             }
             answer = operate(operator, operandOne, operandTwo);
-            // Check if operation returned a number.
+            // Check if operation returned an invalid number.
             if (!Number.isFinite(answer)) return 'Zero Division';
             calculationArr.splice(operatorIndex - 1, itemsToRemove, answer);
         }
@@ -219,7 +219,7 @@
         } else if (elementClasses.contains('equal-button') && length) {
             updateResult(evaluateCalculation());
             calculationArr = [];
-        } else if (elementClasses.contains('clear-button')) {
+        } else if (elementClasses.contains('reset-button')) {
             calculationArr = [];
             clearElementText(document.getElementById('calculation__display'));
             clearElementText(document.getElementById('calculation__result'));
