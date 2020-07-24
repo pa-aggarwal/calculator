@@ -2,34 +2,15 @@
 
 (function() {
 
-    const calculatorElement = document.querySelector('.calculator');
+    const buttonsContainer = document.querySelector('.container');
     // Store numbers and operators inside calculation array.
     let calculationArr = [];
-    const operations = [
-        {
-            operator: '/',
-            operatorCode: 247,
-            operatorRegExp: /\//g,
-            operation: (num1, num2) => num1 / num2
-        },
-        {
-            operator: '*',
-            operatorCode: 215,
-            operatorRegExp: /\*/g,
-            operation: (num1, num2) => num1 * num2
-        },
-        {
-            operator: '+',
-            operatorCode: 43,
-            operatorRegExp: /\+/g,
-            operation: (num1, num2) => num1 + num2
-        },
-        {
-            operator: '-',
-            operatorCode: 8722,
-            operatorRegExp: /-/g,
-            operation: (num1, num2) => num1 - num2
-        }
+    const operationsArr = [
+        {operator: '/',  operation: (num1, num2) => num1 / num2},
+        {operator: '*',  operation: (num1, num2) => num1 * num2},
+        {operator: '+',  operation: (num1, num2) => num1 + num2},
+        {operator: '-',  operation: (num1, num2) => num1 - num2},
+        {operator: '**', operation: (num1, num2) => Math.pow(num1, num2)},
     ];
 
     /**
@@ -40,18 +21,18 @@
      * @return {number}          - Result of math operation.
      */
     function operate(operator, num1, num2) {
-        const object = operations.find(obj => (obj.operator === operator));
+        const object = operationsArr.find(obj => (obj.operator === operator));
         return object.operation(num1, num2);
     }
 
     /**
      * Return a boolean indicating if the provided item is an operator.
-     * @param  {(number|string)} item - An operator ('+', etc.) or number.
+     * @param  {(number|string)} item - An operator, bracket, or number.
      * @return {boolean}              - true if item is operator, else false.
      */
     function isOperator(item) {
-        const operatorSymbols = operations.map(obj => obj.operator);
-        return operatorSymbols.includes(item);
+        const operators = operationsArr.map(obj => obj.operator);
+        return operators.includes(item);
     }
 
     /**
@@ -84,16 +65,6 @@
     }
 
     /**
-     * Return the symbol equivalent of an operator's HTML code.
-     * @param  {number} code - Operator's HTML code i.e 43 (+).
-     * @return {string}            - Operator as a symbol ('*', '/', etc.).
-     */
-    function getOperator(code) {
-        const object = operations.find(obj => (obj.operatorCode === code));
-        return object.operator;
-    }
-
-    /**
      * Add the operator entered into the current calculation being processed.
      * @param {string} newOperator - Operator symbol entered ('*', '/', etc.).
      */
@@ -103,37 +74,60 @@
         if (typeof lastItemEntered === 'number') {
             calculationArr.push(newOperator);
         } else if (isOperator(lastItemEntered)) {
-            // Replace previous operator with newOperator.
+            // Replace previous operator with new operator.
             calculationArr.pop();
             calculationArr.push(newOperator);
         }
     }
 
     /**
-     * Return an updated string with any operator symbols present converted
-     * into their equivalent HTML code values.
-     * @param  {string} string - May contain operators ('+', etc.) to change.
-     * @return {string}        - Updated string with operators replaced.
+     * Return a string representation of the current calculation with spaces
+     * before and after operators and proper formatting.
+     * @return {string} - Calculation represented as a string.
      */
-    function mapOperatorToUnicode(string) {
-        if (string !== '') {
-            operations.forEach(operation => {
-                // Destructure so we don't have to access by dot notation.
-                const {operator, operatorCode, operatorRegExp} = operation;
-                let operatorUnicode = `&#${operatorCode};`;
-                string = string.replace(operatorRegExp, operatorUnicode);
-            });
-        }
-        return string;
+    function getFormattedCalculation() {
+        return calculationArr.reduce((calculationStr, arrItem, currIndex) => {
+            if (isOperator(arrItem)) {
+                if (arrItem === '*') {
+                    calculationStr += ' &#215; ';
+                } else if (arrItem === '/') {
+                    calculationStr += ' &#247; ';
+                } else if (arrItem === '**') {
+                    calculationStr += '<sup>';
+                } else {
+                    calculationStr += ` ${arrItem} `;
+                }
+            } else {
+                const isNumber = typeof arrItem === 'number';
+                if (calculationArr[currIndex - 1] === '**' && isNumber) {
+                    calculationStr += `${arrItem}</sup> `;
+                } else {
+                    calculationStr += `${arrItem}`;
+                }
+            }
+            return calculationStr;
+        });
     }
 
     /**
-     * Set the calculator's display to numbers/operators as they're entered.
+     * Remove all children from a provided node element in the DOM.
+     * @param {Object} node - Node element in the HTML document's tree.
      */
-    function updateDisplay() {
+    function removeAllNodeChildren(node) {
+        while (node.firstChild) {
+            node.removeChild(node.firstChild);
+        }
+    }
+
+    /**
+     * Set the calculator's display to the provided string.
+     * @param {string} displayStr - Calculation entry or '&nbsp;'.
+     */
+    function updateDisplay(displayStr) {
         const displayElement = document.getElementById('calculation__display');
-        let calculationStr = mapOperatorToUnicode(calculationArr.join(' '));
-        displayElement.innerHTML = calculationStr;
+        // Remove previous text node children and insert new string.
+        removeAllNodeChildren(displayElement);
+        displayElement.insertAdjacentHTML('afterbegin', displayStr);
     }
 
     /**
@@ -174,60 +168,56 @@
         // Array only contains a number.
         if (calculationArr.length === 1) return calculationArr[0];
         // Evaluate each operation in order of BEDMAS.
-        for (let i = 0; i < operations.length; i++) {
-            const {operator} = operations[i];
+        const orderOfOperations = ['**', '/', '*', '+', '-'];
+        orderOfOperations.forEach(operator => {
             if (evaluateOperation(operator) === 'Zero Division') {
                 return 'ERROR';
             }
-        }
-        // Array contains 1 number after performing all operations.
+        });
         return calculationArr[0];
     }
 
     /**
-     * Set the calculator's result box to the answer for the entered calulation.
-     * @param {(number|string)} calculationAnswer - Numerical result or 'ERROR'.
+     * Set the calculator's result box to the provided string.
+     * @param {string} newResult - Result of a calculation or '&nbsp;'.
      */
-    function updateResult(calculationAnswer) {
+    function updateResult(newResult) {
         const resultElement = document.getElementById('calculation__result');
-        resultElement.innerText = calculationAnswer + '';
+        removeAllNodeChildren(resultElement);
+        resultElement.insertAdjacentHTML('afterbegin', newResult);
     }
 
     /**
-     * Empty the contents of a provided HTML element using the entity '&nbsp;'.
-     * @param {Object} element - An element object in the DOM.
-     */
-    function clearElementText(element) {
-        element.innerHTML = '&nbsp;';
-    }
-
-    /**
-     * Event handler for `click` events within the calculator device.
+     * Event handler for `click` events within buttons in the calculator.
      * @param {Object} event - The MouseEvent triggering this function.
      */
     function handleClickEvent(event) {
-        const elementClasses = event.target.classList;
-        const length = calculationArr.length;
+        if (!event.target.closest('button')) return;
+        const button = event.target.closest('button');
 
-        if (elementClasses.contains('number-button')) {
+        if (button.classList.contains('number-button')) {
             handleNumberClick(parseInt(event.target.innerText));
-            updateDisplay();
-        } else if (elementClasses.contains('operator-button') && length) {
-            const newOperatorUnicode = event.target.innerHTML.codePointAt(0);
-            handleOperatorClick(getOperator(newOperatorUnicode));
-            updateDisplay();
-        } else if (elementClasses.contains('equal-button') && length) {
-            updateResult(evaluateCalculation());
+            // Insert string version of calculation array.
+            updateDisplay(getFormattedCalculation());
+        } else if (button.classList.contains('reset-button')) {
             calculationArr = [];
-        } else if (elementClasses.contains('reset-button')) {
+            updateDisplay('&nbsp;');
+            updateResult('&nbsp;');
+        }
+
+        if (!calculationArr.length) return;
+
+        if (button.classList.contains('operator-button')) {
+            handleOperatorClick(button.getAttribute('value'));
+            updateDisplay(getFormattedCalculation());
+        } else if (button.classList.contains('equal-button')) {
+            updateResult(evaluateCalculation() + '');
             calculationArr = [];
-            clearElementText(document.getElementById('calculation__display'));
-            clearElementText(document.getElementById('calculation__result'));
         }
     }
 
     // Add 'click' event listener to whole calculator (event delegation).
-    calculatorElement.addEventListener('click', handleClickEvent);
+    buttonsContainer.addEventListener('click', handleClickEvent);
 
 
 })(); /* Invoke function to avoid globally-scoped functions, variables. */
