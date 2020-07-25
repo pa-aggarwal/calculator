@@ -27,7 +27,7 @@
 
     /**
      * Return a boolean indicating if the provided item is an operator.
-     * @param  {(number|string)} item - An operator, bracket, or number.
+     * @param  {(number|string)} item - An operator or number.
      * @return {boolean}              - true if item is operator, else false.
      */
     function isOperator(item) {
@@ -38,13 +38,32 @@
     /**
      * Create one number by joining the last two numbers entered together
      * for the current calculation.
-     * @param {number} num1 - The first number entered.
-     * @param {number} num2 - The second number entered.
+     * @param {(number|string)} num1 - The first number entered.
+     * @param {number}          num2 - The second number entered.
      */
     function concatenateNumbers(num1, num2) {
-        const joinedNumber = parseInt(num1.toString() + num2.toString());
-        calculationArr.pop();
-        calculationArr.push(joinedNumber);
+        let joinedNum;
+        if (num2 === 0) {
+            joinedNum = num1 + num2;
+        } else {
+            const numStr = num1.toString() + num2.toString();
+            joinedNum = parseFloat(numStr);
+        }
+        calculationArr.splice(calculationArr.length - 1, 1, joinedNum);
+    }
+
+    /**
+     * Add a new float number to the calculation being processed.
+     * @param {number} numAfterDecimal - number to place after decimal.
+     */
+    function appendFloatNumber(numAfterDecimal) {
+        const lastNumWithDecimal = calculationArr
+            .splice(calculationArr.length - 2, 2)
+            .join('');
+        let finalNum = lastNumWithDecimal + numAfterDecimal;
+        // Use string if decimal point is 0 (else parseFloat converts to int)
+        finalNum = (numAfterDecimal !== 0) ? parseFloat(finalNum) : finalNum;
+        calculationArr.push(finalNum);
     }
 
     /**
@@ -58,7 +77,9 @@
             const lastItemEntered = calculationArr[calculationArr.length - 1];
             if (isOperator(lastItemEntered)) {
                 calculationArr.push(number);
-            } else if (typeof lastItemEntered === 'number') {
+            } else if (lastItemEntered === '.') {
+                appendFloatNumber(number);
+            } else {
                 concatenateNumbers(lastItemEntered, number);
             }
         }
@@ -71,12 +92,35 @@
     function handleOperatorClick(newOperator) {
         const lastItemEntered = calculationArr[calculationArr.length - 1];
 
-        if (typeof lastItemEntered === 'number') {
-            calculationArr.push(newOperator);
+        if (lastItemEntered === '.') {
+            const lastNumWithDecimal = calculationArr
+                .splice(calculationArr.length - 2, 2)  // Deleted items array
+                .join('');                             // string: '[0-9].'
+            calculationArr.push(parseInt(lastNumWithDecimal), newOperator);
         } else if (isOperator(lastItemEntered)) {
             // Replace previous operator with new operator.
-            calculationArr.pop();
+            calculationArr.splice(calculationArr.length - 1, 1, newOperator);
+        } else {
             calculationArr.push(newOperator);
+        }
+    }
+
+    /**
+     * Append a decimal point to the last number entered in the current
+     * calculation, else place 0 in front of the decimal point.
+     */
+    function handleDecimalClick() {
+        if (!calculationArr.length) {
+            calculationArr.push('0', '.');
+        } else {
+            const lastItemEntered = calculationArr[calculationArr.length - 1];
+            if (lastItemEntered === '.') {
+                return;
+            } else if (Number.isInteger(lastItemEntered)) {
+                calculationArr.push('.');
+            } else if (isOperator(lastItemEntered)) {
+                calculationArr.push('0', '.');
+            }
         }
     }
 
@@ -152,7 +196,8 @@
                 operandTwo = calculationArr[operatorIndex + 1];
                 itemsToRemove = 3;
             }
-            answer = operate(operator, operandOne, operandTwo);
+            // Convert operands to numbers in case they're strings.
+            answer = operate(operator, +operandOne, +operandTwo);
             // Check if operation returned an invalid number.
             if (!Number.isFinite(answer)) return 'Zero Division';
             calculationArr.splice(operatorIndex - 1, itemsToRemove, answer);
@@ -169,11 +214,12 @@
         if (calculationArr.length === 1) return calculationArr[0];
         // Evaluate each operation in order of BEDMAS.
         const orderOfOperations = ['**', '/', '*', '+', '-'];
-        orderOfOperations.forEach(operator => {
+        for (let i = 0; i < orderOfOperations.length; i++) {
+            const operator = orderOfOperations[i];
             if (evaluateOperation(operator) === 'Zero Division') {
                 return 'ERROR';
             }
-        });
+        }
         return calculationArr[0];
     }
 
@@ -196,8 +242,11 @@
         const button = event.target.closest('button');
 
         if (button.classList.contains('number-button')) {
-            handleNumberClick(parseInt(event.target.innerText));
+            handleNumberClick(parseInt(button.getAttribute('value')));
             // Insert string version of calculation array.
+            updateDisplay(getFormattedCalculation());
+        } else if (button.classList.contains('decimal-button')) {
+            handleDecimalClick();
             updateDisplay(getFormattedCalculation());
         } else if (button.classList.contains('reset-button')) {
             calculationArr = [];
