@@ -25,7 +25,7 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
      */
     function concatenateNumbers(num1, num2) {
         let joinedNum;
-        if (num2 === 0) {
+        if (typeof num1 === 'string' && num2 === 0) {
             joinedNum = num1 + num2;
         } else {
             const numStr = num1.toString() + num2.toString();
