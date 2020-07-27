@@ -193,52 +193,37 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
-     * Evaluate operations inside each nested pair of brackets for the current
-     * calculation to follow order of operations.
-     */
-    function evaluateBrackets() {
-        const leftBracketIndices = [];
-        const rightBracketIndices = [];
-        calculationArr.forEach((element, index) => {
-            if (element === '(') leftBracketIndices.push(index);
-            if (element === ')') rightBracketIndices.push(index);
-        });
-        let innerMostArr;
-        for (let l = leftBracketIndices.length - 1, r = 0; l >= 0; l--, r++) {
-            let leftIndex = leftBracketIndices[l];
-            let rightIndex = rightBracketIndices[r];
-            innerMostArr = calculationArr.slice(leftIndex + 1, rightIndex);
-            if (innerMostArr.length === 1) {
-                calculationArr.splice(leftIndex, 3, innerMostArr[0]);
-            } else {
-                const calcAnswer = evaluateInnerCalc(innerMostArr);
-                if (calcAnswer === 'Zero Division') {
-                    return 'ERROR';
-                } else {
-                    const itemsInCalc = rightIndex - leftIndex + 1;
-                    calculationArr.splice(leftIndex, itemsInCalc, calcAnswer);
-                }
-            }
-        }
-    }
-
-    /**
-     * Return the result of the calculation entered, or an error string for
-     * invalid calculations (i.e division by 0, unequal brackets).
-     * @return {(number|string)} - Calculation's numerical result or 'ERROR'.
+     * Return the result of the current calculation by performing order of
+     * operations (BEDMAS), or an error string indicating an invalid entry.
+     * @return {(number|string)} - Calculation result or 'ERROR'.
      */
     function evaluateCalculation() {
-        if (calculationArr.length === 1 && !isNaN(calculationArr[0])) {
-            return calculationArr[0];
+        // Number of brackets in the calculation must be equal.
+        if (getNumBrackets('(') !== getNumBrackets(')')) return 'ERROR';
+
+        let leftIndex;
+        let rightIndex;
+        let nestedCalc;
+        let nestedAnswer;
+        let nestedCalcItems;
+
+        // Perform all operations nested in brackets first.
+        while (calculationArr.includes('(')) {
+            leftIndex = calculationArr.indexOf('(');
+            rightIndex = calculationArr.indexOf(')');
+            nestedCalc = calculationArr.slice(leftIndex + 1, rightIndex);
+            while (nestedCalc.includes('(')) {
+                leftIndex = calculationArr.indexOf('(', leftIndex + 1);
+                nestedCalc = calculationArr.slice(leftIndex + 1, rightIndex);
+            }
+            nestedAnswer = evaluateInnerCalc(nestedCalc);
+            if (nestedAnswer === 'Zero Division') return 'ERROR';
+            nestedCalcItems = rightIndex - leftIndex + 1;
+            calculationArr.splice(leftIndex, nestedCalcItems, nestedAnswer);
         }
-        const numLeftBrackets = getNumBrackets('(');
-        const numRightBrackets = getNumBrackets(')');
-        // Number of opening and closing brackets not equal.
-        if (numLeftBrackets !== numRightBrackets) return 'ERROR';
-        // Number of brackets are equal and greater than zero.
-        if (numLeftBrackets) evaluateBrackets();
-        // Evaluate rest of calculation not in brackets.
-        let finalAnswer = evaluateInnerCalc(calculationArr);
+
+        // Evalute any operations left that aren't in brackets.
+        const finalAnswer = evaluateInnerCalc(calculationArr);
         return (finalAnswer === 'Zero Division') ? 'ERROR' : finalAnswer;
     }
 
@@ -253,13 +238,15 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
-     * Update an element's HTML code with the provided string.
-     * @param {Object} element  - Element in the document to modify.
+     * Update element(s) HTML code with the provided string.
      * @param {string} htmlText - HTML code to place inside element.
+     * @param {Object} elements - Array of elements in the document to modify.
      */
-    function updateElementHTML(element, htmlText) {
-        removeAllNodeChildren(element);
-        element.insertAdjacentHTML('afterbegin', htmlText);
+    function updateElementHTML(htmlText, ...elements) {
+        elements.forEach(element => {
+            removeAllNodeChildren(element);
+            element.insertAdjacentHTML('afterbegin', htmlText);
+        });
     }
 
     /**
@@ -275,8 +262,7 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
 
         if (button.classList.contains('reset-button')) {
             calculationArr = [];
-            updateElementHTML(resultElement, '&nbsp;');
-            updateElementHTML(displayElement, '&nbsp;');
+            updateElementHTML('&nbsp;', resultElement, displayElement);
             return;
         } else if (button.classList.contains('number-button')) {
             handleNumberClick(parseInt(button.getAttribute('value')));
@@ -285,14 +271,14 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
         } else if (button.classList.contains('bracket-button')) {
             handleBracketClick(button.getAttribute('value'));
         }
-        updateElementHTML(displayElement, getFormattedCalculation());
+        updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (!calculationArr.length) return;
         if (button.classList.contains('operator-button')) {
             handleOperatorClick(button.getAttribute('value'));
-            updateElementHTML(displayElement, getFormattedCalculation());
+            updateElementHTML(getFormattedCalculation(), displayElement);
         } else if (button.classList.contains('equal-button')) {
-            updateElementHTML(resultElement, evaluateCalculation() + '');
+            updateElementHTML(evaluateCalculation() + '', resultElement);
             calculationArr = [];
         }
     }

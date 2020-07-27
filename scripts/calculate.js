@@ -77,4 +77,4 @@ const calculate = function() {
 
 }();
 
-export const [operate, isOperator, evaluateInnerCalc] = calculate;
+export const {operate, isOperator, evaluateInnerCalc} = calculate;
