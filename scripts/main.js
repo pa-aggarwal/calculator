@@ -36,6 +36,17 @@
     }
 
     /**
+     * Remove the previous number and decimal point entered from the current
+     * calculation, and return both joined as a string.
+     * @return {string} - String matching the pattern \^[0-9]/.$\
+     */
+    function removeLastNumAndDecimal() {
+        const secondLastItemPos = calculationArr.length - 2;
+        const lastNumWithDecimal = calculationArr.splice(secondLastItemPos, 2);
+        return lastNumWithDecimal.join('');
+    }
+
+    /**
      * Create one number by joining the last two numbers entered together
      * for the current calculation.
      * @param {(number|string)} num1 - The first number entered.
@@ -57,13 +68,21 @@
      * @param {number} numAfterDecimal - number to place after decimal.
      */
     function appendFloatNumber(numAfterDecimal) {
-        const lastNumWithDecimal = calculationArr
-            .splice(calculationArr.length - 2, 2)
-            .join('');
-        let finalNum = lastNumWithDecimal + numAfterDecimal;
+        let finalNum = removeLastNumAndDecimal() + numAfterDecimal;
         // Use string if decimal point is 0 (else parseFloat converts to int)
         finalNum = (numAfterDecimal !== 0) ? parseFloat(finalNum) : finalNum;
         calculationArr.push(finalNum);
+    }
+
+    /**
+     * Return the number of open/closed brackets in the current calculation.
+     * @param  {string} bracketType - An open or closed bracket i.e '(' or ')'.
+     * @return {number}             - Number count of open/closed brackets.
+     */
+    function getNumBrackets(bracketType) {
+        return calculationArr.reduce((total, element) => {
+            return (element === bracketType) ? total + 1 : total;
+        }, 0);
     }
 
     /**
@@ -74,13 +93,15 @@
         if (!calculationArr.length) {
             calculationArr.push(number);
         } else {
-            const lastItemEntered = calculationArr[calculationArr.length - 1];
-            if (isOperator(lastItemEntered)) {
+            const lastEntry = calculationArr[calculationArr.length - 1];
+            if (isOperator(lastEntry) || lastEntry === '(') {
                 calculationArr.push(number);
-            } else if (lastItemEntered === '.') {
+            } else if (lastEntry === '.') {
                 appendFloatNumber(number);
+            } else if (lastEntry === ')') {
+                calculationArr.push('*', number);
             } else {
-                concatenateNumbers(lastItemEntered, number);
+                concatenateNumbers(lastEntry, number);
             }
         }
     }
@@ -90,14 +111,15 @@
      * @param {string} newOperator - Operator symbol entered ('*', '/', etc.).
      */
     function handleOperatorClick(newOperator) {
-        const lastItemEntered = calculationArr[calculationArr.length - 1];
+        const lastEntry = calculationArr[calculationArr.length - 1];
+        const lastEntryType = typeof lastEntry;
 
-        if (lastItemEntered === '.') {
-            const lastNumWithDecimal = calculationArr
-                .splice(calculationArr.length - 2, 2)  // Deleted items array
-                .join('');                             // string: '[0-9].'
-            calculationArr.push(parseInt(lastNumWithDecimal), newOperator);
-        } else if (isOperator(lastItemEntered)) {
+        if (lastEntry === '(') {
+            return;
+        } else if (lastEntry === '.') {
+            const lastNumAsInt = parseInt(removeLastNumAndDecimal());
+            calculationArr.push(lastNumAsInt, newOperator);
+        } else if (isOperator(lastEntry)) {
             // Replace previous operator with new operator.
             calculationArr.splice(calculationArr.length - 1, 1, newOperator);
         } else {
@@ -113,14 +135,56 @@
         if (!calculationArr.length) {
             calculationArr.push('0', '.');
         } else {
-            const lastItemEntered = calculationArr[calculationArr.length - 1];
-            if (lastItemEntered === '.') {
+            const lastEntry = calculationArr[calculationArr.length - 1];
+            if (lastEntry === '.') {
                 return;
-            } else if (Number.isInteger(lastItemEntered)) {
+            } else if (Number.isInteger(lastEntry)) {
                 calculationArr.push('.');
-            } else if (isOperator(lastItemEntered)) {
+            } else if (isOperator(lastEntry) || lastEntry === '(') {
                 calculationArr.push('0', '.');
+            } else if (lastEntry === ')') {
+                calculationArr.push('*', '0', '.');
             }
+        }
+    }
+
+    /**
+     * Add a bracket entered into the current calculation.
+     * @param {string} bracketType - An open/closed bracket i.e '(' or ')'.
+     */
+    function handleBracketClick(bracketType) {
+        if (!calculationArr.length) {
+            if (bracketType === '(') calculationArr.push(bracketType);
+        } else {
+            const lastEntry = calculationArr[calculationArr.length - 1];
+            const addToCalculation = [];
+            let isMoreLeftBrackets = getNumBrackets('(') > getNumBrackets(')');
+            let lastNumToInt;
+
+            if (bracketType === ')' && !isMoreLeftBrackets) return;
+
+            if (lastEntry === '.') {
+                lastNumToInt = parseInt(removeLastNumAndDecimal());
+            }
+
+            if (bracketType === '(' && lastEntry === '.') {
+                addToCalculation.push(lastNumToInt, '*', bracketType);
+            } else if (bracketType === '(') {
+                if (isOperator(lastEntry) || (lastEntry === '(')) {
+                    addToCalculation.push(bracketType);
+                } else {
+                    addToCalculation.push('*', bracketType);
+                }
+            } else if (bracketType === ')' && lastEntry === '.') {
+                addToCalculation.push(lastNumToInt, bracketType);
+            } else if (bracketType === ')') {
+                if (isOperator(lastEntry) || (lastEntry === '(')) {
+                    calculationArr.pop();
+                    console.log(calculationArr);
+                }
+                if (lastEntry !== '(') addToCalculation.push(bracketType);
+            }
+            calculationArr.push(...addToCalculation);
         }
     }
 
@@ -130,24 +194,18 @@
      * @return {string} - Calculation represented as a string.
      */
     function getFormattedCalculation() {
-        return calculationArr.reduce((calculationStr, arrItem, currIndex) => {
-            if (isOperator(arrItem)) {
-                if (arrItem === '*') {
+        if (!calculationArr.length) return '&nbsp;';
+        return calculationArr.reduce((calculationStr, currItem) => {
+            if (isOperator(currItem)) {
+                if (currItem === '*') {
                     calculationStr += ' &#215; ';
-                } else if (arrItem === '/') {
+                } else if (currItem === '/') {
                     calculationStr += ' &#247; ';
-                } else if (arrItem === '**') {
-                    calculationStr += '<sup>';
                 } else {
-                    calculationStr += ` ${arrItem} `;
+                    calculationStr += ` ${currItem} `;
                 }
             } else {
-                const isNumber = typeof arrItem === 'number';
-                if (calculationArr[currIndex - 1] === '**' && isNumber) {
-                    calculationStr += `${arrItem}</sup> `;
-                } else {
-                    calculationStr += `${arrItem}`;
-                }
+                calculationStr += `${currItem}`;
             }
             return calculationStr;
         });
@@ -175,52 +233,80 @@
     }
 
     /**
-     * Evaluate a single operation in the current calculation being processed.
-     * @param {string} operator - A mathematical operator ('+', '/', etc).
+     * Evaluate all operations in a calculation stored in a provided array.
+     * @param {Object} innerArr - Array of numbers/operators.
      */
-    function evaluateOperation(operator) {
+    function evaluateInnerCalc(innerArr) {
         let operatorIndex;
         let itemsToRemove;
         let operandOne;
         let operandTwo;
         let answer;
 
-        while (calculationArr.includes(operator)) {
-            operatorIndex = calculationArr.findIndex(item => item === operator);
-            operandOne = calculationArr[operatorIndex - 1];
-            // Check if second operand exists, else operand 1 equals operand 2.
-            if (operatorIndex === calculationArr.length - 1) {
-                operandTwo = operandOne;
-                itemsToRemove = 2;
-            } else {
-                operandTwo = calculationArr[operatorIndex + 1];
-                itemsToRemove = 3;
+        const orderOfOperations = ['**', '/', '*', '+', '-'];
+        for (let i = 0; i < orderOfOperations.length; i++) {
+            const operator = orderOfOperations[i];
+            while (innerArr.includes(operator)) {
+                operatorIndex = innerArr.findIndex(item => item === operator);
+                operandOne = innerArr[operatorIndex - 1];
+                // Check if second operand exists, else operands are equal.
+                if (operatorIndex === innerArr.length - 1) {
+                    operandTwo = operandOne;
+                    itemsToRemove = 2;
+                } else {
+                    operandTwo = innerArr[operatorIndex + 1];
+                    itemsToRemove = 3;
+                }
+                // Convert operands to numbers in case they're strings.
+                answer = operate(operator, +operandOne, +operandTwo);
+                // Check if operation returned an invalid number.
+                if (!Number.isFinite(answer)) return 'Zero Division';
+                innerArr.splice(operatorIndex - 1, itemsToRemove, answer);
             }
-            // Convert operands to numbers in case they're strings.
-            answer = operate(operator, +operandOne, +operandTwo);
-            // Check if operation returned an invalid number.
-            if (!Number.isFinite(answer)) return 'Zero Division';
-            calculationArr.splice(operatorIndex - 1, itemsToRemove, answer);
         }
+
+        return innerArr[0];
     }
 
     /**
      * Return the result of the calculation entered, or an error string for
-     * invalid calculations (i.e division by 0).
+     * invalid calculations (i.e division by 0, unequal brackets).
      * @return {(number|string)} - Calculation's numerical result or 'ERROR'.
      */
     function evaluateCalculation() {
-        // Array only contains a number.
-        if (calculationArr.length === 1) return calculationArr[0];
-        // Evaluate each operation in order of BEDMAS.
-        const orderOfOperations = ['**', '/', '*', '+', '-'];
-        for (let i = 0; i < orderOfOperations.length; i++) {
-            const operator = orderOfOperations[i];
-            if (evaluateOperation(operator) === 'Zero Division') {
-                return 'ERROR';
+        if (calculationArr.length === 1 && !isNaN(calculationArr[0])) {
+            return calculationArr[0];
+        }
+
+        if (getNumBrackets('(') !== getNumBrackets(')')) return 'ERROR';
+
+        const leftBracketIndices = [];
+        const rightBracketIndices = [];
+        calculationArr.forEach((element, index) => {
+            if (element === '(') leftBracketIndices.push(index);
+            if (element === ')') rightBracketIndices.push(index);
+        });
+
+        let innerMostArr;
+        for (let l = leftBracketIndices.length - 1, r = 0; l >= 0; l--, r++) {
+            let leftIndex = leftBracketIndices[l];
+            let rightIndex = rightBracketIndices[r];
+            innerMostArr = calculationArr.slice(leftIndex + 1, rightIndex);
+            if (innerMostArr.length === 1) {
+                calculationArr.splice(leftIndex, 3, innerMostArr[0]);
+            } else {
+                let calcAnswer = evaluateInnerCalc(innerMostArr);
+                if (calcAnswer === 'Zero Division') {
+                    return 'ERROR';
+                } else {
+                    const itemsInCalc = rightIndex - leftIndex + 1;
+                    calculationArr.splice(leftIndex, itemsInCalc, calcAnswer);
+                }
             }
         }
-        return calculationArr[0];
+
+        let finalAnswer = evaluateInnerCalc(calculationArr);
+        return (finalAnswer === 'Zero Division') ? 'ERROR' : finalAnswer;
     }
 
     /**
@@ -252,6 +338,9 @@
             calculationArr = [];
             updateDisplay('&nbsp;');
             updateResult('&nbsp;');
+        } else if (button.classList.contains('bracket-button')) {
+            handleBracketClick(button.getAttribute('value'));
+            updateDisplay(getFormattedCalculation());
         }
 
         if (!calculationArr.length) return;
@@ -267,6 +356,5 @@
 
     // Add 'click' event listener to whole calculator (event delegation).
     buttonsContainer.addEventListener('click', handleClickEvent);
-
 
 })(); /* Invoke function to avoid globally-scoped functions, variables. */
