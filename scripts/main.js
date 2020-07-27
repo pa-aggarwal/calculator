@@ -120,42 +120,52 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Add '(' to the current calculation based on the last entry's value.
+     * @param  {(number|string)} lastEntry - Previous item entered.
+     */
+    function isLeftBracket(lastEntry) {
+        if (lastEntry === '.') {
+            const lastNumToInt = parseInt(removeLastNumAndDecimal());
+            calculationArr.push(lastNumToInt, '*', '(');
+        } else if (isOperator(lastEntry) || (lastEntry === '(')) {
+            calculationArr.push('(');
+        } else {
+            calculationArr.push('*', '(');
+        }
+    }
+
+    /**
+     * Add ')' to the current calculation based on the last entry's value.
+     * @param  {(number|string)} lastEntry - Previous item entered.
+     */
+    function isRightBracket(lastEntry) {
+        if (lastEntry === '.') {
+            const lastNumToInt = parseInt(removeLastNumAndDecimal());
+            calculationArr.push(lastNumToInt, ')');
+        } else {
+            if (isOperator(lastEntry) || (lastEntry === '(')) {
+                calculationArr.pop();
+            }
+            if (lastEntry !== '(') calculationArr.push(')');
+        }
+    }
+
+    /**
      * Add a bracket entered into the current calculation.
      * @param {string} bracketType - An open/closed bracket i.e '(' or ')'.
      */
     function handleBracketClick(bracketType) {
-        if (!calculationArr.length) {
-            if (bracketType === '(') calculationArr.push(bracketType);
-        } else {
+        if (!calculationArr.length && bracketType === '(') {
+            calculationArr.push(bracketType);
+        } else if (calculationArr.length) {
             const lastEntry = calculationArr[calculationArr.length - 1];
-            const addToCalculation = [];
-            let isMoreLeftBrackets = getNumBrackets('(') > getNumBrackets(')');
-            let lastNumToInt;
-
-            if (bracketType === ')' && !isMoreLeftBrackets) return;
-
-            if (lastEntry === '.') {
-                lastNumToInt = parseInt(removeLastNumAndDecimal());
+            if (bracketType === '(') {
+                isLeftBracket(lastEntry);
+            } else if (getNumBrackets('(') <= getNumBrackets(')')) {
+                return;
+            } else {
+                isRightBracket(lastEntry);
             }
-
-            if (bracketType === '(' && lastEntry === '.') {
-                addToCalculation.push(lastNumToInt, '*', bracketType);
-            } else if (bracketType === '(') {
-                if (isOperator(lastEntry) || (lastEntry === '(')) {
-                    addToCalculation.push(bracketType);
-                } else {
-                    addToCalculation.push('*', bracketType);
-                }
-            } else if (bracketType === ')' && lastEntry === '.') {
-                addToCalculation.push(lastNumToInt, bracketType);
-            } else if (bracketType === ')') {
-                if (isOperator(lastEntry) || (lastEntry === '(')) {
-                    calculationArr.pop();
-                    console.log(calculationArr);
-                }
-                if (lastEntry !== '(') addToCalculation.push(bracketType);
-            }
-            calculationArr.push(...addToCalculation);
         }
     }
 
@@ -183,6 +193,56 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Evaluate operations inside each nested pair of brackets for the current
+     * calculation to follow order of operations.
+     */
+    function evaluateBrackets() {
+        const leftBracketIndices = [];
+        const rightBracketIndices = [];
+        calculationArr.forEach((element, index) => {
+            if (element === '(') leftBracketIndices.push(index);
+            if (element === ')') rightBracketIndices.push(index);
+        });
+        let innerMostArr;
+        for (let l = leftBracketIndices.length - 1, r = 0; l >= 0; l--, r++) {
+            let leftIndex = leftBracketIndices[l];
+            let rightIndex = rightBracketIndices[r];
+            innerMostArr = calculationArr.slice(leftIndex + 1, rightIndex);
+            if (innerMostArr.length === 1) {
+                calculationArr.splice(leftIndex, 3, innerMostArr[0]);
+            } else {
+                const calcAnswer = evaluateInnerCalc(innerMostArr);
+                if (calcAnswer === 'Zero Division') {
+                    return 'ERROR';
+                } else {
+                    const itemsInCalc = rightIndex - leftIndex + 1;
+                    calculationArr.splice(leftIndex, itemsInCalc, calcAnswer);
+                }
+            }
+        }
+    }
+
+    /**
+     * Return the result of the calculation entered, or an error string for
+     * invalid calculations (i.e division by 0, unequal brackets).
+     * @return {(number|string)} - Calculation's numerical result or 'ERROR'.
+     */
+    function evaluateCalculation() {
+        if (calculationArr.length === 1 && !isNaN(calculationArr[0])) {
+            return calculationArr[0];
+        }
+        const numLeftBrackets = getNumBrackets('(');
+        const numRightBrackets = getNumBrackets(')');
+        // Number of opening and closing brackets not equal.
+        if (numLeftBrackets !== numRightBrackets) return 'ERROR';
+        // Number of brackets are equal and greater than zero.
+        if (numLeftBrackets) evaluateBrackets();
+        // Evaluate rest of calculation not in brackets.
+        let finalAnswer = evaluateInnerCalc(calculationArr);
+        return (finalAnswer === 'Zero Division') ? 'ERROR' : finalAnswer;
+    }
+
+    /**
      * Remove all children from a provided node element in the DOM.
      * @param {Object} node - Node element in the HTML document's tree.
      */
@@ -193,69 +253,13 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
-     * Set the calculator's display to the provided string.
-     * @param {string} displayStr - Calculation entry or '&nbsp;'.
+     * Update an element's HTML code with the provided string.
+     * @param {Object} element  - Element in the document to modify.
+     * @param {string} htmlText - HTML code to place inside element.
      */
-    function updateDisplay(displayStr) {
-        const displayElement = document.getElementById('calculation__display');
-        // Remove previous text node children and insert new string.
-        removeAllNodeChildren(displayElement);
-        displayElement.insertAdjacentHTML('afterbegin', displayStr);
-    }
-
-    /**
-     * Evaluate all operations in a calculation stored in a provided array.
-     * @param {Object} innerArr - Array of numbers/operators.
-     */
-    /**
-     * Return the result of the calculation entered, or an error string for
-     * invalid calculations (i.e division by 0, unequal brackets).
-     * @return {(number|string)} - Calculation's numerical result or 'ERROR'.
-     */
-    function evaluateCalculation() {
-        if (calculationArr.length === 1 && !isNaN(calculationArr[0])) {
-            return calculationArr[0];
-        }
-
-        if (getNumBrackets('(') !== getNumBrackets(')')) return 'ERROR';
-
-        const leftBracketIndices = [];
-        const rightBracketIndices = [];
-        calculationArr.forEach((element, index) => {
-            if (element === '(') leftBracketIndices.push(index);
-            if (element === ')') rightBracketIndices.push(index);
-        });
-
-        let innerMostArr;
-        for (let l = leftBracketIndices.length - 1, r = 0; l >= 0; l--, r++) {
-            let leftIndex = leftBracketIndices[l];
-            let rightIndex = rightBracketIndices[r];
-            innerMostArr = calculationArr.slice(leftIndex + 1, rightIndex);
-            if (innerMostArr.length === 1) {
-                calculationArr.splice(leftIndex, 3, innerMostArr[0]);
-            } else {
-                let calcAnswer = evaluateInnerCalc(innerMostArr);
-                if (calcAnswer === 'Zero Division') {
-                    return 'ERROR';
-                } else {
-                    const itemsInCalc = rightIndex - leftIndex + 1;
-                    calculationArr.splice(leftIndex, itemsInCalc, calcAnswer);
-                }
-            }
-        }
-
-        let finalAnswer = evaluateInnerCalc(calculationArr);
-        return (finalAnswer === 'Zero Division') ? 'ERROR' : finalAnswer;
-    }
-
-    /**
-     * Set the calculator's result box to the provided string.
-     * @param {string} newResult - Result of a calculation or '&nbsp;'.
-     */
-    function updateResult(newResult) {
-        const resultElement = document.getElementById('calculation__result');
-        removeAllNodeChildren(resultElement);
-        resultElement.insertAdjacentHTML('afterbegin', newResult);
+    function updateElementHTML(element, htmlText) {
+        removeAllNodeChildren(element);
+        element.insertAdjacentHTML('afterbegin', htmlText);
     }
 
     /**
@@ -264,31 +268,31 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
      */
     function handleClickEvent(event) {
         if (!event.target.closest('button')) return;
-        const button = event.target.closest('button');
 
-        if (button.classList.contains('number-button')) {
+        const button = event.target.closest('button');
+        const displayElement = document.getElementById('calculation__display');
+        const resultElement = document.getElementById('calculation__result');
+
+        if (button.classList.contains('reset-button')) {
+            calculationArr = [];
+            updateElementHTML(resultElement, '&nbsp;');
+            updateElementHTML(displayElement, '&nbsp;');
+            return;
+        } else if (button.classList.contains('number-button')) {
             handleNumberClick(parseInt(button.getAttribute('value')));
-            // Insert string version of calculation array.
-            updateDisplay(getFormattedCalculation());
         } else if (button.classList.contains('decimal-button')) {
             handleDecimalClick();
-            updateDisplay(getFormattedCalculation());
-        } else if (button.classList.contains('reset-button')) {
-            calculationArr = [];
-            updateDisplay('&nbsp;');
-            updateResult('&nbsp;');
         } else if (button.classList.contains('bracket-button')) {
             handleBracketClick(button.getAttribute('value'));
-            updateDisplay(getFormattedCalculation());
         }
+        updateElementHTML(displayElement, getFormattedCalculation());
 
         if (!calculationArr.length) return;
-
         if (button.classList.contains('operator-button')) {
             handleOperatorClick(button.getAttribute('value'));
-            updateDisplay(getFormattedCalculation());
+            updateElementHTML(displayElement, getFormattedCalculation());
         } else if (button.classList.contains('equal-button')) {
-            updateResult(evaluateCalculation() + '');
+            updateElementHTML(resultElement, evaluateCalculation() + '');
             calculationArr = [];
         }
     }
