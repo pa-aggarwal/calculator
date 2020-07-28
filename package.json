@@ -1,0 +1,23 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "My calculator project from the Odin Project.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass --watch styles/scss --indent-type space -o styles/css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pa-aggarwal/calculator.git"
+  },
+  "keywords": [
+    "calculator"
+  ],
+  "author": "Priya Aggarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pa-aggarwal/calculator/issues"
+  },
+  "homepage": "https://github.com/pa-aggarwal/calculator#readme"
+}
