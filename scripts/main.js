@@ -203,6 +203,31 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Remove the previous digit, decimal point, operator, or bracket entered
+     * from the current calculation.
+     */
+    function handleUndoClick() {
+        const lastEntry = calculationArr[calculationArr.length - 1];
+        if (isOperator(lastEntry) || lastEntry === '(' || lastEntry === ')') {
+            calculationArr.pop();
+        } else if (lastEntry === '.') {
+            const secondLastEntry = calculationArr[calculationArr.length - 2];
+            if (secondLastEntry === '0') {
+                calculationArr.splice(calculationArr.length - 2, 2);
+            } else if (typeof secondLastEntry === 'number') {
+                calculationArr.splice(calculationArr.length - 1, 1);
+            }
+        } else {
+            const lastItem = calculationArr.pop() + '';
+            const lastItemSubstr = lastItem.slice(0, lastItem.length - 1);
+            // Only push back item if not empty string.
+            if (lastItemSubstr) {
+                calculationArr.push(lastItemSubstr);
+            }
+        }
+    }
+
+    /**
      * Return a string representation of the current calculation with spaces
      * before and after operators and proper formatting.
      * @return {string} - Calculation represented as a string.
@@ -315,6 +340,8 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
             handleOperatorClick(button.getAttribute('value'));
         } else if (button.classList.contains('sign-button')) {
             handleSignClick();
+        } else if (button.classList.contains('undo-button')) {
+            handleUndoClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
     }
