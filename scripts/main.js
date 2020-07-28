@@ -297,6 +297,23 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Evaluate and return the result of the current calculation after the
+     * equal button is clicked.
+     * @return {string} - Calculation result or 'ERROR'.
+     */
+    function handleEqualClick() {
+        previousAnswer = evaluateCalculation() + '';
+        return previousAnswer;
+    }
+
+    /**
+     * Empty the contents of the current calculation.
+     */
+    function emptyCalculation() {
+        calculationArr = [];
+    }
+
+    /**
      * Remove all children from a provided node element in the DOM.
      * @param {Object} node - Node element in the HTML document's tree.
      */
@@ -330,7 +347,7 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
         const resultElement = document.getElementById('calculation__result');
 
         if (button.classList.contains('reset-button')) {
-            calculationArr = [];
+            emptyCalculation();
             updateElementHTML('&nbsp;', resultElement, displayElement);
             return;
         } else if (button.classList.contains('number-button')) {
@@ -346,9 +363,8 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
 
         if (!calculationArr.length) return;
         if (button.classList.contains('equal-button')) {
-            previousAnswer = evaluateCalculation() + '';
-            updateElementHTML(previousAnswer, resultElement);
-            calculationArr = [];
+            updateElementHTML(handleEqualClick(), resultElement);
+            emptyCalculation();
             return;
         } else if (button.classList.contains('operator-button')) {
             handleOperatorClick(button.getAttribute('value'));
