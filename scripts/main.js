@@ -170,6 +170,39 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Change the sign of the previous entry if it was numeric or a float
+     * stored as a string.
+     */
+    function handleSignClick() {
+        const calcLength = calculationArr.length;
+        const lastEntry = calculationArr[calcLength - 1];
+        if (isOperator(lastEntry) || lastEntry === '(' || lastEntry === ')') {
+            return;
+        } else if (lastEntry === '.') {
+            const secondLastEntry = calculationArr[calcLength - 2];
+            if (typeof secondLastEntry === 'number' && secondLastEntry === 0) {
+                calculationArr[calcLength - 2] = '-0';
+            } else if (typeof secondLastEntry === 'number') {
+                calculationArr[calcLength - 2] = -secondLastEntry;
+            } else if (typeof secondLastEntry === 'string') {
+                if (secondLastEntry.includes('-')) {
+                    calculationArr[calcLength - 2] = secondLastEntry.slice(1);
+                } else {
+                    calculationArr[calcLength - 2] = '-' + secondLastEntry;
+                }
+            }
+        } else if (typeof lastEntry === 'string') {
+            if (lastEntry.startsWith('-')) {
+                calculationArr[calcLength - 1] = lastEntry.slice(1);
+            } else {
+                calculationArr[calcLength - 1] = '-' + lastEntry;
+            }
+        } else if (typeof lastEntry === 'number') {
+            calculationArr[calcLength - 1] = -lastEntry;
+        }
+    }
+
+    /**
      * Return a string representation of the current calculation with spaces
      * before and after operators and proper formatting.
      * @return {string} - Calculation represented as a string.
@@ -274,13 +307,16 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
         updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (!calculationArr.length) return;
-        if (button.classList.contains('operator-button')) {
-            handleOperatorClick(button.getAttribute('value'));
-            updateElementHTML(getFormattedCalculation(), displayElement);
-        } else if (button.classList.contains('equal-button')) {
+        if (button.classList.contains('equal-button')) {
             updateElementHTML(evaluateCalculation() + '', resultElement);
             calculationArr = [];
+            return;
+        } else if (button.classList.contains('operator-button')) {
+            handleOperatorClick(button.getAttribute('value'));
+        } else if (button.classList.contains('sign-button')) {
+            handleSignClick();
         }
+        updateElementHTML(getFormattedCalculation(), displayElement);
     }
 
     // Add 'click' event listener to whole calculator (event delegation).
