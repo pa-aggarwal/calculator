@@ -5,6 +5,7 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     const buttonsContainer = document.querySelector('.container');
     // Store numbers and operators inside calculation array.
     let calculationArr = [];
+    let previousAnswer;
 
     /**
      * Remove the previous number and decimal point entered from the current
@@ -228,6 +229,16 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
     }
 
     /**
+     * Append the answer from the last calculation into the current one,
+     * with the exception that the last answer was 'ERROR' or is undefined.
+     */
+    function handleLastAnswerClick() {
+        if (previousAnswer && previousAnswer !== 'ERROR') {
+            calculationArr.push(previousAnswer);
+        }
+    }
+
+    /**
      * Return a string representation of the current calculation with spaces
      * before and after operators and proper formatting.
      * @return {string} - Calculation represented as a string.
@@ -328,12 +339,15 @@ import {operate, isOperator, evaluateInnerCalc} from './calculate.js';
             handleDecimalClick();
         } else if (button.classList.contains('bracket-button')) {
             handleBracketClick(button.getAttribute('value'));
+        } else if (button.classList.contains('answer-button')) {
+            handleLastAnswerClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (!calculationArr.length) return;
         if (button.classList.contains('equal-button')) {
-            updateElementHTML(evaluateCalculation() + '', resultElement);
+            previousAnswer = evaluateCalculation() + '';
+            updateElementHTML(previousAnswer, resultElement);
             calculationArr = [];
             return;
         } else if (button.classList.contains('operator-button')) {
