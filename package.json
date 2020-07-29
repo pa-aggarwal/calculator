@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass --watch styles/scss --indent-type space -o styles/css"
+    "scss": "node-sass --watch styles/scss/main.scss --indent-type space -o styles/css"
   },
   "repository": {
     "type": "git",
