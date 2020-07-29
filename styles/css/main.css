@@ -1,3 +1,76 @@
+/* stylelint-disable */
 body {
   font-family: sans-serif;
-  font-size: 1.6rem; }
+  font-size: 2.5rem; }
+
+.calculator {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.75rem; }
+
+#calculation {
+  margin-bottom: 2.25rem; }
+  #calculation output {
+    display: block;
+    text-align: right; }
+  #calculation__display {
+    font-size: 2rem; }
+  #calculation__result {
+    font-size: 3.5rem;
+    padding: 1rem 0; }
+
+.container {
+  display: grid;
+  gap: 0.75rem;
+  grid-gap: 0.75rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-template-areas: "answer answer clear undo" "left-bracket right-bracket exponent sign" "seven eight nine divide" "four five six multiply" "one two three add" "zero decimal equals subtract"; }
+  .container button[name="answer"] {
+    grid-area: answer; }
+  .container button[name="answer"] {
+    grid-area: answer; }
+  .container button[name="clear"] {
+    grid-area: clear; }
+  .container button[name="undo"] {
+    grid-area: undo; }
+  .container button[name="left-bracket"] {
+    grid-area: left-bracket; }
+  .container button[name="right-bracket"] {
+    grid-area: right-bracket; }
+  .container button[name="exponent"] {
+    grid-area: exponent; }
+  .container button[name="sign"] {
+    grid-area: sign; }
+  .container button[name="seven"] {
+    grid-area: seven; }
+  .container button[name="eight"] {
+    grid-area: eight; }
+  .container button[name="nine"] {
+    grid-area: nine; }
+  .container button[name="divide"] {
+    grid-area: divide; }
+  .container button[name="four"] {
+    grid-area: four; }
+  .container button[name="five"] {
+    grid-area: five; }
+  .container button[name="six"] {
+    grid-area: six; }
+  .container button[name="multiply"] {
+    grid-area: multiply; }
+  .container button[name="one"] {
+    grid-area: one; }
+  .container button[name="two"] {
+    grid-area: two; }
+  .container button[name="three"] {
+    grid-area: three; }
+  .container button[name="add"] {
+    grid-area: add; }
+  .container button[name="zero"] {
+    grid-area: zero; }
+  .container button[name="decimal"] {
+    grid-area: decimal; }
+  .container button[name="equals"] {
+    grid-area: equals; }
+  .container button[name="subtract"] {
+    grid-area: subtract; }

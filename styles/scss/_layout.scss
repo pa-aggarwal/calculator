@@ -1,0 +1,49 @@
+// stylelint-disable at-rule-no-unknown
+
+.calculator {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: $calculator-gutter + 1rem;
+}
+
+#calculation {
+    margin-bottom: $calculator-gutter + 1.5rem;
+
+    output {
+        display: block;
+        text-align: right;
+    }
+
+    &__display {
+        font-size: $default-font-size - .5rem;
+    }
+
+    &__result {
+        font-size: $default-font-size + 1rem;
+        padding: 1rem 0;
+    }
+}
+
+.container {
+    @include set-grid-areas(
+        $area-row1-list,
+        $area-row2-list,
+        $area-row3-list,
+        $area-row4-list,
+        $area-row5-list,
+        $area-row6-list
+    );
+
+    display: grid;
+    gap: $calculator-gutter;
+    grid-gap: $calculator-gutter;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+        "#{$area-row1-list}"
+        "#{$area-row2-list}"
+        "#{$area-row3-list}"
+        "#{$area-row4-list}"
+        "#{$area-row5-list}"
+        "#{$area-row6-list}";
+}

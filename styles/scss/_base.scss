@@ -1,0 +1,28 @@
+// stylelint-disable at-rule-no-unknown
+
+// GRID VARIABLES
+$area-row1-list: answer answer clear undo;
+$area-row2-list: left-bracket right-bracket exponent sign;
+$area-row3-list: seven eight nine divide;
+$area-row4-list: four five six multiply;
+$area-row5-list: one two three add;
+$area-row6-list: zero decimal equals subtract;
+
+$calculator-gutter: .75rem;
+$default-font-size: 2.5rem;
+
+// MIXINS
+@mixin set-grid-areas($all-rows...) {
+    @each $row in $all-rows {
+        @each $area in $row {
+            button[name="#{$area}"] {
+                grid-area: $area;
+            }
+        }
+    }
+}
+
+body {
+    font-family: sans-serif;
+    font-size: $default-font-size;
+}
