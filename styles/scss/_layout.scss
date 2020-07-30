@@ -1,24 +1,17 @@
 // stylelint-disable at-rule-no-unknown
 
 .calculator {
-    max-width: 27.5rem;
-    margin: 0 auto;
+    max-width: 32rem;
+    margin: 3rem auto 0;
+    overflow: hidden;
 }
 
 .display {
-    padding: 0 0 1rem;
+    padding: $display-padding + 1rem;
 
-    output {
-        display: block;
-    }
+    output { display: block; }
 
-    &__input {
-        padding: 0 $display-padding;
-    }
-
-    &__result {
-        padding: $display-padding;
-    }
+    &__result { padding-top: $display-padding; }
 }
 
 .container {
@@ -30,7 +23,6 @@
         $area-row5-list,
         $area-row6-list
     );
-
     display: grid;
     gap: $calc-gutter-row $calc-gutter-col;
     grid-gap: $calc-gutter-row $calc-gutter-col;
@@ -43,4 +35,5 @@
         "#{$area-row4-list}"
         "#{$area-row5-list}"
         "#{$area-row6-list}";
+    padding: $calc-gutter-row + 1rem;
 }
