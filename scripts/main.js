@@ -49,31 +49,31 @@ import {
         const displayElement = document.querySelector('.display__input');
         const resultElement = document.querySelector('.display__result');
 
-        if (button.classList.contains('button__reset')) {
+        if (button.classList.contains('calc-button--reset')) {
             emptyCalculation();
             updateElementHTML('&nbsp;', resultElement, displayElement);
             return;
-        } else if (button.classList.contains('button__number')) {
+        } else if (button.classList.contains('calc-button--number')) {
             handleNumberClick(parseInt(button.getAttribute('value')));
-        } else if (button.classList.contains('button__decimal')) {
+        } else if (button.classList.contains('calc-button--decimal')) {
             handleDecimalClick();
-        } else if (button.classList.contains('button__bracket')) {
+        } else if (button.classList.contains('calc-button--bracket')) {
             handleBracketClick(button.getAttribute('value'));
-        } else if (button.classList.contains('button__answer')) {
+        } else if (button.classList.contains('calc-button--answer')) {
             handleLastAnswerClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (isEmptyCalculation()) return;
-        if (button.classList.contains('button__equal')) {
+        if (button.classList.contains('calc-button--equal')) {
             updateElementHTML(handleEqualClick(), resultElement);
             emptyCalculation();
             return;
-        } else if (button.classList.contains('button__operator')) {
+        } else if (button.classList.contains('calc-button--operator')) {
             handleOperatorClick(button.getAttribute('value'));
-        } else if (button.classList.contains('button__sign')) {
+        } else if (button.classList.contains('calc-button--sign')) {
             handleSignClick();
-        } else if (button.classList.contains('button__undo')) {
+        } else if (button.classList.contains('calc-button--undo')) {
             handleUndoClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);

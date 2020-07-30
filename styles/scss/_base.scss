@@ -1,5 +1,15 @@
 // stylelint-disable at-rule-no-unknown
 
+// COLOR VARIABLES
+$color-black: #000;
+$color-white: #FFF;
+$color-grey-med: #CFD7DE;
+$color-primary-dark: #0B132B;
+$color-primary-med: #1C2541;
+$color-primary-light: #3A506B;
+$color-secondary-dark: #5BC0BE;
+$color-secondary-bright: #6FFFE9;
+
 // GRID VARIABLES
 $area-row1-list: answer answer clear undo;
 $area-row2-list: left-bracket right-bracket sign exponent;
@@ -12,6 +22,7 @@ $calc-gutter-col: 1rem;
 
 // CALCULATOR VARIABLES
 $display-padding: 1rem;
+$btn-padding-vert: 1.5rem;
 
 // GENERAL VARIABLES
 $default-font-size: 2.5rem;
@@ -27,7 +38,32 @@ $default-font-size: 2.5rem;
     }
 }
 
+@mixin btn-theme($dark-theme: true) {
+    @if $dark-theme {
+        background-color: $color-primary-med;
+        color: $color-white;
+
+        &:hover {
+            background-color: $color-white;
+            color: $color-primary-med;
+        }
+
+    } @else {
+        background-color: $color-secondary-dark;
+        color: $color-primary-med;
+
+        &:hover {
+            background-color: lighten($color-secondary-bright, 5);
+        }
+    }
+}
+
+@mixin btn-shadow($offset-y: .75rem) {
+    box-shadow: .3rem $offset-y .1rem $color-primary-light;
+}
+
 body {
+    background-color: $color-primary-med;
     font-family: sans-serif;
     font-size: $default-font-size;
 }

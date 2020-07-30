@@ -1,0 +1,57 @@
+// stylelint-disable at-rule-no-unknown
+
+.calculator {
+    background-color: $color-grey-med;
+    border-radius: 1.5rem;
+    box-shadow: 1rem 1.5rem 1.5rem $color-black;
+}
+
+.display {
+    background-color: $color-primary-dark;
+    color: $color-white;
+}
+
+.calc-button {
+    @include btn-shadow;
+    padding: $btn-padding-vert 0;
+    // Transition all properties except outline.
+    transition: background-color .2s, color .2s, transform .2s, box-shadow .2s;
+
+    &:hover {
+        @include btn-shadow(1rem);
+        transform: translateY(-.2rem);
+    }
+
+    // Keep outline for accessibility purposes.
+    &:focus { outline: .1rem solid $color-primary-med; }
+
+    &:active {
+        @include btn-shadow(.5rem);
+        transform: translateY(.1rem);
+    }
+
+    &:not(&--answer) { border-radius: 50%; }
+
+    &--answer {
+        @include btn-theme($dark-theme: true);
+        border-radius: 3rem;
+    }
+
+    &--reset,
+    &--undo,
+    &--number,
+    &--decimal,
+    &--equal { @include btn-theme($dark-theme: true); }
+
+    &--bracket,
+    &--sign {
+        @include btn-theme($dark-theme: false);
+        padding: $btn-padding-vert - .5rem 0;
+    }
+
+    &--operator {
+        @include btn-theme($dark-theme: false);
+
+        &[name="exponent"] { padding: $btn-padding-vert - .5rem 0; }
+    }
+}
