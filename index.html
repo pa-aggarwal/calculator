@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Favicon image -->
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
         <!-- Personal Stylesheets -->
         <link rel="stylesheet" href="styles/css/reset.css">
         <link rel="stylesheet" href="styles/css/main.css">
@@ -13,41 +15,39 @@
     <body>
 
         <form action="" method="get" class="calculator">
-            <div id="calculation">
-                <output id="calculation__display">&nbsp;</output>
-                <output id="calculation__result">&nbsp;</output>
+            <div class="display">
+                <output class="display__input">&nbsp;</output>
+                <output class="display__result">&nbsp;</output>
             </div>
             <div class="container">
                 <!-- Button for getting previous calculation answer. -->
-                <button class="answer-button" type="button" name="answer">ANS</button>
-                <button class="reset-button" type="reset" name="clear">AC</button>
-                <button class="undo-button" type="button" name="undo">C</button>
-                <button class="bracket-button" type="button" name="left-bracket" value="(">(</button>
-                <button class="bracket-button" type="button" name="right-bracket" value=")">)</button>
-                <button class="operator-button" type="button" name="exponent" value="**">
-                    <var class="exponent-base">x<sup class="exponent-power">y</sup></var>
-                </button>
+                <button class="button__answer" type="button" name="answer">ANS</button>
+                <button class="button__reset" type="reset" name="clear">AC</button>
+                <button class="button__undo" type="button" name="undo">C</button>
+                <button class="button__bracket" type="button" name="left-bracket" value="(">(</button>
+                <button class="button__bracket" type="button" name="right-bracket" value=")">)</button>
+                <button class="button__operator" type="button" name="exponent" value="**">x<sup class="exponent-power">y</sup></button>
                 <!-- HTML entity for plus/minus sign. -->
-                <button class="sign-button" type="button" name="sign" value="+/-">&#177;</button>
-                <button class="number-button" type="button" name="seven" value="7">7</button>
-                <button class="number-button" type="button" name="eight" value="8">8</button>
-                <button class="number-button" type="button" name="nine" value="9">9</button>
+                <button class="button__sign" type="button" name="sign" value="+/-">&#177;</button>
+                <button class="button__number" type="button" name="seven" value="7">7</button>
+                <button class="button__number" type="button" name="eight" value="8">8</button>
+                <button class="button__number" type="button" name="nine" value="9">9</button>
                 <!-- HTML entity for divide symbol. -->
-                <button class="operator-button" type="button" name="divide" value="/">&#247;</button>
-                <button class="number-button" type="button" name="four" value="4">4</button>
-                <button class="number-button" type="button" name="five" value="5">5</button>
-                <button class="number-button" type="button" name="six" value="6">6</button>
+                <button class="button__operator" type="button" name="divide" value="/">&#247;</button>
+                <button class="button__number" type="button" name="four" value="4">4</button>
+                <button class="button__number" type="button" name="five" value="5">5</button>
+                <button class="button__number" type="button" name="six" value="6">6</button>
                 <!-- HTML entity for multiply symbol. -->
-                <button class="operator-button" type="button" name="multiply" value="*">&#215;</button>
-                <button class="number-button" type="button" name="one" value="1">1</button>
-                <button class="number-button" type="button" name="two" value="2">2</button>
-                <button class="number-button" type="button" name="three" value="3">3</button>
-                <button class="operator-button" type="button" name="add" value="+">+</button>
-                <button class="number-button" type="button" name="zero" value="0">0</button>
-                <button class="decimal-button" type="button" name="decimal" value=".">.</button>
-                <button class="equal-button" type="button" name="equals" value="=">=</button>
+                <button class="button__operator" type="button" name="multiply" value="*">&#215;</button>
+                <button class="button__number" type="button" name="one" value="1">1</button>
+                <button class="button__number" type="button" name="two" value="2">2</button>
+                <button class="button__number" type="button" name="three" value="3">3</button>
+                <button class="button__operator" type="button" name="add" value="+">+</button>
+                <button class="button__number" type="button" name="zero" value="0">0</button>
+                <button class="button__decimal" type="button" name="decimal" value=".">.</button>
+                <button class="button__equal" type="button" name="equals" value="=">=</button>
                 <!-- HTML entity for subtract symbol. -->
-                <button class="operator-button" type="button" name="subtract" value="-">&#8722;</button>
+                <button class="button__operator" type="button" name="subtract" value="-">&#8722;</button>
             </div>
         </form>
 

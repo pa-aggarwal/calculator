@@ -1,26 +1,23 @@
 // stylelint-disable at-rule-no-unknown
 
 .calculator {
-    max-width: 40rem;
+    max-width: 27.5rem;
     margin: 0 auto;
-    padding: $calculator-gutter + 1rem;
 }
 
-#calculation {
-    margin-bottom: $calculator-gutter + 1.5rem;
+.display {
+    padding: 0 0 1rem;
 
     output {
         display: block;
-        text-align: right;
     }
 
-    &__display {
-        font-size: $default-font-size - .5rem;
+    &__input {
+        padding: 0 $display-padding;
     }
 
     &__result {
-        font-size: $default-font-size + 1rem;
-        padding: 1rem 0;
+        padding: $display-padding;
     }
 }
 
@@ -35,8 +32,8 @@
     );
 
     display: grid;
-    gap: $calculator-gutter;
-    grid-gap: $calculator-gutter;
+    gap: $calc-gutter-row $calc-gutter-col;
+    grid-gap: $calc-gutter-row $calc-gutter-col;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: auto;
     grid-template-areas:

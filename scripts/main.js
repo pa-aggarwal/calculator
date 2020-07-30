@@ -46,34 +46,34 @@ import {
         if (!event.target.closest('button')) return;
 
         const button = event.target.closest('button');
-        const displayElement = document.getElementById('calculation__display');
-        const resultElement = document.getElementById('calculation__result');
+        const displayElement = document.querySelector('.display__input');
+        const resultElement = document.querySelector('.display__result');
 
-        if (button.classList.contains('reset-button')) {
+        if (button.classList.contains('button__reset')) {
             emptyCalculation();
             updateElementHTML('&nbsp;', resultElement, displayElement);
             return;
-        } else if (button.classList.contains('number-button')) {
+        } else if (button.classList.contains('button__number')) {
             handleNumberClick(parseInt(button.getAttribute('value')));
-        } else if (button.classList.contains('decimal-button')) {
+        } else if (button.classList.contains('button__decimal')) {
             handleDecimalClick();
-        } else if (button.classList.contains('bracket-button')) {
+        } else if (button.classList.contains('button__bracket')) {
             handleBracketClick(button.getAttribute('value'));
-        } else if (button.classList.contains('answer-button')) {
+        } else if (button.classList.contains('button__answer')) {
             handleLastAnswerClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (isEmptyCalculation()) return;
-        if (button.classList.contains('equal-button')) {
+        if (button.classList.contains('button__equal')) {
             updateElementHTML(handleEqualClick(), resultElement);
             emptyCalculation();
             return;
-        } else if (button.classList.contains('operator-button')) {
+        } else if (button.classList.contains('button__operator')) {
             handleOperatorClick(button.getAttribute('value'));
-        } else if (button.classList.contains('sign-button')) {
+        } else if (button.classList.contains('button__sign')) {
             handleSignClick();
-        } else if (button.classList.contains('undo-button')) {
+        } else if (button.classList.contains('button__undo')) {
             handleUndoClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);

@@ -4,25 +4,22 @@ body {
   font-size: 2.5rem; }
 
 .calculator {
-  max-width: 40rem;
-  margin: 0 auto;
-  padding: 1.75rem; }
+  max-width: 27.5rem;
+  margin: 0 auto; }
 
-#calculation {
-  margin-bottom: 2.25rem; }
-  #calculation output {
-    display: block;
-    text-align: right; }
-  #calculation__display {
-    font-size: 2rem; }
-  #calculation__result {
-    font-size: 3.5rem;
-    padding: 1rem 0; }
+.display {
+  padding: 0 0 1rem; }
+  .display output {
+    display: block; }
+  .display__input {
+    padding: 0 1rem; }
+  .display__result {
+    padding: 1rem; }
 
 .container {
   display: grid;
-  gap: 0.75rem;
-  grid-gap: 0.75rem;
+  gap: 1.25rem 1rem;
+  grid-gap: 1.25rem 1rem;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;
   grid-template-areas: "answer answer clear undo" "left-bracket right-bracket exponent sign" "seven eight nine divide" "four five six multiply" "one two three add" "zero decimal equals subtract"; }
@@ -74,3 +71,50 @@ body {
     grid-area: equals; }
   .container button[name="subtract"] {
     grid-area: subtract; }
+
+.calculator {
+  font-family: 'Varela Round', sans-serif; }
+
+.display output {
+  text-align: right; }
+
+.display__input {
+  font-size: 2rem; }
+
+.display__result {
+  font-size: 3.5rem; }
+
+button {
+  border-radius: 50%;
+  box-shadow: 0.3rem 0.75rem 0.2rem rgba(0, 0, 0, 0.2);
+  display: inline-block; }
+
+.button__answer {
+  padding: 1.5rem 0;
+  border-radius: 3rem; }
+
+.button__reset {
+  padding: 1.5rem 0; }
+
+.button__undo {
+  padding: 1.5rem 0; }
+
+.button__bracket {
+  padding: 1.3rem 0; }
+
+.button__sign {
+  padding: 1.3rem 0; }
+
+.button__number {
+  padding: 1.5rem 0; }
+
+.button__decimal {
+  padding: 1.5rem 0; }
+
+.button__equal {
+  padding: 1.5rem 0; }
+
+.button__operator {
+  padding: 1.5rem 0; }
+  .button__operator[name="exponent"] {
+    padding: 1.3rem 0; }

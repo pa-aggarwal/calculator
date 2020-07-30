@@ -8,7 +8,10 @@ $area-row4-list: four five six multiply;
 $area-row5-list: one two three add;
 $area-row6-list: zero decimal equals subtract;
 
-$calculator-gutter: .75rem;
+$calc-gutter-row: 1.25rem;
+$calc-gutter-col: 1rem;
+$display-padding: 1rem;
+
 $default-font-size: 2.5rem;
 
 // MIXINS
