@@ -238,6 +238,29 @@ const buttonClick = function() {
     }
 
     /**
+     * Return a rounded/smaller number if it's length exceeds 12 digits.
+     * @param  {number} finalAnswer - The current calculation's final result.
+     * @return {number}             - Orig. num or rounded/smaller equivalent.
+     */
+    function round(finalAnswer) {
+        const finalAnswerStr = finalAnswer.toString();
+        const maxDigits = 12;
+
+        if (finalAnswerStr.length <= maxDigits) {
+            return finalAnswer;
+        } else {
+            const decimalIndex = finalAnswerStr.indexOf('.');
+            let wholeNumLen;
+            if (decimalIndex >= 0) {
+                wholeNumLen = finalAnswerStr.slice(0, decimalIndex).length;
+                return parseFloat(finalAnswer.toFixed(maxDigits - wholeNumLen));
+            } else {
+                return parseInt(finalAnswerStr.slice(0, maxDigits));
+            }
+        }
+    }
+
+    /**
      * Return the result of the current calculation by performing order of
      * operations (BEDMAS), or an error string indicating an invalid entry.
      * @return {(number|string)} - Calculation result or 'ERROR'.
@@ -269,7 +292,11 @@ const buttonClick = function() {
 
         // Evalute any operations left that aren't in brackets.
         const finalAnswer = evaluateInnerCalc(calculationArr);
-        return (finalAnswer === 'Zero Division') ? 'ERROR' : finalAnswer;
+        if (finalAnswer === 'Zero Division') {
+            return 'ERROR';
+        } else {
+            return round(finalAnswer);
+        }
     }
 
     /**
