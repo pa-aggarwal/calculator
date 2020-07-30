@@ -322,6 +322,8 @@ const buttonClick = function() {
                     calculationStr += ' &#215; ';
                 } else if (currItem === '/') {
                     calculationStr += ' &#247; ';
+                } else if (currItem === '**') {
+                    calculationStr += '^';
                 } else {
                     calculationStr += ` ${currItem} `;
                 }

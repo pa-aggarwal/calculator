@@ -39,47 +39,96 @@ import {
     }
 
     /**
-     * Event handler for `click` events within buttons in the calculator.
-     * @param {Object} event - The MouseEvent triggering this function.
+     * Perform a button's action based on the button pressed/clicked.
+     * @param {Object} buttonSelected - Properties indicate button type chosen.
      */
-    function handleClickEvent(event) {
-        if (!event.target.closest('button')) return;
-
-        const button = event.target.closest('button');
+    function executeButtonAction(buttonSelected) {
         const displayElement = document.querySelector('.display__input');
         const resultElement = document.querySelector('.display__result');
 
-        if (button.classList.contains('calc-button--reset')) {
+        if (buttonSelected.isReset) {
             emptyCalculation();
             updateElementHTML('&nbsp;', resultElement, displayElement);
             return;
-        } else if (button.classList.contains('calc-button--number')) {
-            handleNumberClick(parseInt(button.getAttribute('value')));
-        } else if (button.classList.contains('calc-button--decimal')) {
+        } else if (buttonSelected.isNumber) {
+            handleNumberClick(parseInt(buttonSelected.value));
+        } else if (buttonSelected.isDecimal) {
             handleDecimalClick();
-        } else if (button.classList.contains('calc-button--bracket')) {
-            handleBracketClick(button.getAttribute('value'));
-        } else if (button.classList.contains('calc-button--answer')) {
+        } else if (buttonSelected.isBracket) {
+            handleBracketClick(buttonSelected.value);
+        } else if (buttonSelected.isAnswer) {
             handleLastAnswerClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
 
         if (isEmptyCalculation()) return;
-        if (button.classList.contains('calc-button--equal')) {
+        if (buttonSelected.isEqual) {
             updateElementHTML(handleEqualClick(), resultElement);
             emptyCalculation();
             return;
-        } else if (button.classList.contains('calc-button--operator')) {
-            handleOperatorClick(button.getAttribute('value'));
-        } else if (button.classList.contains('calc-button--sign')) {
+        } else if (buttonSelected.isOperator) {
+            if (buttonSelected.value === '^') {
+                handleOperatorClick('**');
+            } else {
+                handleOperatorClick(buttonSelected.value);
+            }
+        } else if (buttonSelected.isSign) {
             handleSignClick();
-        } else if (button.classList.contains('calc-button--undo')) {
+        } else if (buttonSelected.isUndo) {
             handleUndoClick();
         }
         updateElementHTML(getFormattedCalculation(), displayElement);
     }
 
+    /**
+     * Event handler for `click` events within buttons in the calculator.
+     * @param {Object} event - The MouseEvent triggering this function.
+     */
+    function handleClickEvent(event) {
+        if (!event.target.closest('button')) return;
+        const button = event.target.closest('button');
+        const buttonClickedObj = {
+            isReset: button.classList.contains('calc-button--reset'),
+            isEqual: button.classList.contains('calc-button--equal'),
+            isUndo: button.classList.contains('calc-button--undo'),
+            isAnswer: button.classList.contains('calc-button--answer'),
+            isDecimal: button.classList.contains('calc-button--decimal'),
+            isSign: button.classList.contains('calc-button--sign'),
+            isNumber: button.classList.contains('calc-button--number'),
+            isBracket: button.classList.contains('calc-button--bracket'),
+            isOperator: button.classList.contains('calc-button--operator'),
+            value: button.getAttribute('value')
+        };
+
+        executeButtonAction(buttonClickedObj);
+    }
+
+    /**
+     * Event handler for `keydown` events caused by keyboard presses.
+     * @param {Object} event - The KeyboardEvent triggering this function.
+     */
+    function handleKeyEvent(event) {
+        const keyPressed = event.key;
+        const keyEnteredObj = {
+            isReset: (keyPressed === 'C'),
+            isEqual: (keyPressed === '=' || keyPressed === 'Enter'),
+            isUndo: (keyPressed === 'Backspace'),
+            isAnswer: (keyPressed === 'A'),
+            isDecimal: (keyPressed === '.'),
+            isSign: (keyPressed === 'S'),
+            isNumber: !isNaN(keyPressed),
+            isBracket: (keyPressed === '(' || keyPressed === ')'),
+            isOperator: (['+', '-', '*', '/', '^'].includes(keyPressed)),
+            value: keyPressed
+        };
+
+        executeButtonAction(keyEnteredObj);
+    }
+
     // Add 'click' event listener to whole calculator (event delegation).
     buttonsContainer.addEventListener('click', handleClickEvent);
+
+    // Add 'keydown' event listener for buttons pressed on keyboard.
+    document.addEventListener('keydown', handleKeyEvent);
 
 })(); /* Invoke function to avoid globally-scoped functions, variables. */
