@@ -1,8 +1,15 @@
+
 // stylelint-disable at-rule-no-unknown
 
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
 .calculator {
-    max-width: 32rem;
-    margin: 3rem auto 0;
+    flex-basis: 32rem;
     overflow: hidden;
 }
 

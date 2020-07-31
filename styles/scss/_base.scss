@@ -1,3 +1,4 @@
+
 // stylelint-disable at-rule-no-unknown
 
 // COLOR VARIABLES
@@ -21,17 +22,18 @@ $calc-gutter-row: 1.25rem;
 $calc-gutter-col: 1rem;
 
 // CALCULATOR VARIABLES
+$calc-font-size: 2.75rem;
 $display-padding: 1rem;
 $btn-padding-vert: 1.5rem;
 
 // GENERAL VARIABLES
-$default-font-size: 2.5rem;
+$default-font-size: 1.6rem;
 
 // MIXINS
 @mixin set-grid-areas($all-rows...) {
     @each $row in $all-rows {
         @each $area in $row {
-            button[name="#{$area}"] {
+            .calc-button[name="#{$area}"] {
                 grid-area: $area;
             }
         }
@@ -51,19 +53,11 @@ $default-font-size: 2.5rem;
     } @else {
         background-color: $color-secondary-dark;
         color: $color-primary-med;
-
-        &:hover {
-            background-color: lighten($color-secondary-bright, 5);
-        }
+        // Brighten bg-color on hover state. hi
+        &:hover { background-color: lighten($color-secondary-bright, 5); }
     }
 }
 
 @mixin btn-shadow($offset-y: .75rem) {
     box-shadow: .3rem $offset-y .1rem $color-primary-light;
-}
-
-body {
-    background-color: $color-primary-med;
-    font-family: sans-serif;
-    font-size: $default-font-size;
 }

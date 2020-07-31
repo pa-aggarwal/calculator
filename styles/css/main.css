@@ -1,137 +1,232 @@
 /* stylelint-disable */
-body {
-  background-color: #1C2541;
-  font-family: sans-serif;
-  font-size: 2.5rem; }
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
 
 .calculator {
-  max-width: 32rem;
-  margin: 3rem auto 0;
-  overflow: hidden; }
+    flex-basis: 32rem;
+    overflow: hidden;
+}
 
 .display {
-  padding: 2rem; }
-  .display output {
-    display: block; }
-  .display__result {
-    padding-top: 1rem; }
-
-.container {
-  display: grid;
-  gap: 1.25rem 1rem;
-  grid-gap: 1.25rem 1rem;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto;
-  grid-template-areas: "answer answer clear undo" "left-bracket right-bracket sign exponent" "seven eight nine divide" "four five six multiply" "one two three add" "zero decimal equals subtract";
-  padding: 2.25rem; }
-  .container button[name="answer"] {
-    grid-area: answer; }
-  .container button[name="answer"] {
-    grid-area: answer; }
-  .container button[name="clear"] {
-    grid-area: clear; }
-  .container button[name="undo"] {
-    grid-area: undo; }
-  .container button[name="left-bracket"] {
-    grid-area: left-bracket; }
-  .container button[name="right-bracket"] {
-    grid-area: right-bracket; }
-  .container button[name="sign"] {
-    grid-area: sign; }
-  .container button[name="exponent"] {
-    grid-area: exponent; }
-  .container button[name="seven"] {
-    grid-area: seven; }
-  .container button[name="eight"] {
-    grid-area: eight; }
-  .container button[name="nine"] {
-    grid-area: nine; }
-  .container button[name="divide"] {
-    grid-area: divide; }
-  .container button[name="four"] {
-    grid-area: four; }
-  .container button[name="five"] {
-    grid-area: five; }
-  .container button[name="six"] {
-    grid-area: six; }
-  .container button[name="multiply"] {
-    grid-area: multiply; }
-  .container button[name="one"] {
-    grid-area: one; }
-  .container button[name="two"] {
-    grid-area: two; }
-  .container button[name="three"] {
-    grid-area: three; }
-  .container button[name="add"] {
-    grid-area: add; }
-  .container button[name="zero"] {
-    grid-area: zero; }
-  .container button[name="decimal"] {
-    grid-area: decimal; }
-  .container button[name="equals"] {
-    grid-area: equals; }
-  .container button[name="subtract"] {
-    grid-area: subtract; }
-
-.calculator {
-  font-family: 'Varela Round', sans-serif;
-  font-size: 2.75rem; }
+    padding: 2rem;
+}
 
 .display output {
-  text-align: right; }
-
-.display__input {
-  font-size: 2rem; }
+    display: block;
+}
 
 .display__result {
-  font-size: 3.5rem; }
+    padding-top: 1rem;
+}
+
+.container {
+    display: grid;
+    gap: 1.25rem 1rem;
+    grid-gap: 1.25rem 1rem;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: "answer answer clear undo" "left-bracket right-bracket sign exponent" "seven eight nine divide" "four five six multiply" "one two three add" "zero decimal equals subtract";
+    padding: 2.25rem;
+}
+
+.container .calc-button[name="answer"] {
+    grid-area: answer;
+}
+
+.container .calc-button[name="answer"] {
+    grid-area: answer;
+}
+
+.container .calc-button[name="clear"] {
+    grid-area: clear;
+}
+
+.container .calc-button[name="undo"] {
+    grid-area: undo;
+}
+
+.container .calc-button[name="left-bracket"] {
+    grid-area: left-bracket;
+}
+
+.container .calc-button[name="right-bracket"] {
+    grid-area: right-bracket;
+}
+
+.container .calc-button[name="sign"] {
+    grid-area: sign;
+}
+
+.container .calc-button[name="exponent"] {
+    grid-area: exponent;
+}
+
+.container .calc-button[name="seven"] {
+    grid-area: seven;
+}
+
+.container .calc-button[name="eight"] {
+    grid-area: eight;
+}
+
+.container .calc-button[name="nine"] {
+    grid-area: nine;
+}
+
+.container .calc-button[name="divide"] {
+    grid-area: divide;
+}
+
+.container .calc-button[name="four"] {
+    grid-area: four;
+}
+
+.container .calc-button[name="five"] {
+    grid-area: five;
+}
+
+.container .calc-button[name="six"] {
+    grid-area: six;
+}
+
+.container .calc-button[name="multiply"] {
+    grid-area: multiply;
+}
+
+.container .calc-button[name="one"] {
+    grid-area: one;
+}
+
+.container .calc-button[name="two"] {
+    grid-area: two;
+}
+
+.container .calc-button[name="three"] {
+    grid-area: three;
+}
+
+.container .calc-button[name="add"] {
+    grid-area: add;
+}
+
+.container .calc-button[name="zero"] {
+    grid-area: zero;
+}
+
+.container .calc-button[name="decimal"] {
+    grid-area: decimal;
+}
+
+.container .calc-button[name="equals"] {
+    grid-area: equals;
+}
+
+.container .calc-button[name="subtract"] {
+    grid-area: subtract;
+}
+
+body {
+    background-color: #1C2541;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 2.5rem;
+}
 
 .calculator {
-  background-color: #CFD7DE;
-  border-radius: 1.5rem;
-  box-shadow: 1rem 1.5rem 1.5rem #000; }
+    font-size: 2.75rem;
+}
+
+.display output {
+    text-align: right;
+}
+
+.display__input {
+    font-size: 2rem;
+}
+
+.display__result {
+    font-size: 3.5rem;
+}
+
+.calculator {
+    background-color: #CFD7DE;
+    border-radius: 1.5rem;
+    box-shadow: 1rem 1.5rem 1.5rem #000;
+}
 
 .display {
-  background-color: #0B132B;
-  color: #FFF; }
+    background-color: #0B132B;
+    color: #FFF;
+}
 
 .calc-button {
-  box-shadow: 0.3rem 0.75rem 0.1rem #3A506B;
-  padding: 1.5rem 0;
-  transition: background-color .2s, color .2s, transform .2s, box-shadow .2s; }
-  .calc-button:hover {
+    box-shadow: 0.3rem 0.75rem 0.1rem #3A506B;
+    padding: 1.5rem 0;
+    transition: background-color .2s, color .2s, transform .2s, box-shadow .2s;
+}
+
+.calc-button:hover {
     box-shadow: 0.3rem 1rem 0.1rem #3A506B;
-    transform: translateY(-0.2rem); }
-  .calc-button:focus {
-    outline: 0.1rem solid #1C2541; }
-  .calc-button:active {
+    cursor: pointer;
+    transform: translateY(-0.2rem);
+}
+
+.calc-button:focus {
+    outline: 0.1rem solid #1C2541;
+}
+
+.calc-button:active {
     box-shadow: 0.3rem 0.5rem 0.1rem #3A506B;
-    transform: translateY(0.1rem); }
-  .calc-button:not(.calc-button--answer) {
-    border-radius: 50%; }
-  .calc-button--answer {
+    transform: translateY(0.1rem);
+}
+
+.calc-button:not(.calc-button--answer) {
+    border-radius: 50%;
+}
+
+.calc-button--answer {
     background-color: #1C2541;
     color: #FFF;
-    border-radius: 3rem; }
-    .calc-button--answer:hover {
-      background-color: #FFF;
-      color: #1C2541; }
-  .calc-button--reset, .calc-button--undo, .calc-button--number, .calc-button--decimal, .calc-button--equal {
+    border-radius: 3rem;
+}
+
+.calc-button--answer:hover {
+    background-color: #FFF;
+    color: #1C2541;
+}
+
+.calc-button--reset, .calc-button--undo, .calc-button--number, .calc-button--decimal, .calc-button--equal {
     background-color: #1C2541;
-    color: #FFF; }
-    .calc-button--reset:hover, .calc-button--undo:hover, .calc-button--number:hover, .calc-button--decimal:hover, .calc-button--equal:hover {
-      background-color: #FFF;
-      color: #1C2541; }
-  .calc-button--bracket, .calc-button--sign {
+    color: #FFF;
+}
+
+.calc-button--reset:hover, .calc-button--undo:hover, .calc-button--number:hover, .calc-button--decimal:hover, .calc-button--equal:hover {
+    background-color: #FFF;
+    color: #1C2541;
+}
+
+.calc-button--bracket, .calc-button--sign {
     background-color: #5BC0BE;
     color: #1C2541;
-    padding: 1rem 0; }
-    .calc-button--bracket:hover, .calc-button--sign:hover {
-      background-color: #89ffed; }
-  .calc-button--operator {
+    padding: 1rem 0;
+}
+
+.calc-button--bracket:hover, .calc-button--sign:hover {
+    background-color: #89ffed;
+}
+
+.calc-button--operator {
     background-color: #5BC0BE;
-    color: #1C2541; }
-    .calc-button--operator:hover {
-      background-color: #89ffed; }
-    .calc-button--operator[name="exponent"] {
-      padding: 1rem 0; }
+    color: #1C2541;
+}
+
+.calc-button--operator:hover {
+    background-color: #89ffed;
+}
+
+.calc-button--operator[name="exponent"] {
+    padding: 1rem 0;
+}

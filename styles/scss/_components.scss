@@ -1,3 +1,4 @@
+
 // stylelint-disable at-rule-no-unknown
 
 .calculator {
@@ -19,6 +20,7 @@
 
     &:hover {
         @include btn-shadow(1rem);
+        cursor: pointer;
         transform: translateY(-.2rem);
     }
 

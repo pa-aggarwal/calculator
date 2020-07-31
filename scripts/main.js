@@ -125,7 +125,7 @@ import {
         executeButtonAction(keyEnteredObj);
     }
 
-    // Add 'click' event listener to whole calculator (event delegation).
+    // Add 'click' event listener to container only (event delegation).
     buttonsContainer.addEventListener('click', handleClickEvent);
 
     // Add 'keydown' event listener for buttons pressed on keyboard.

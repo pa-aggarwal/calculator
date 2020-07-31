@@ -1,20 +1,16 @@
+
 // stylelint-disable at-rule-no-unknown
 
-.calculator {
+body {
+    background-color: $color-primary-med;
     font-family: 'Varela Round', sans-serif;
-    font-size: 2.75rem;
+    font-size: $default-font-size;
 }
 
+.calculator { font-size: $calc-font-size; }
+
 .display {
-    output {
-        text-align: right;
-    }
-
-    &__input {
-        font-size: $default-font-size - .5rem;
-    }
-
-    &__result {
-        font-size: $default-font-size + 1rem;
-    }
+    output { text-align: right; }
+    &__input { font-size: $calc-font-size - .75rem; }
+    &__result { font-size: $calc-font-size + .75rem; }
 }
