@@ -1,6 +1,8 @@
 
 // stylelint-disable at-rule-no-unknown
 
+body { position: relative; }
+
 .content {
     display: flex;
     align-items: center;
@@ -43,4 +45,64 @@
         "#{$area-row5-list}"
         "#{$area-row6-list}";
     padding: $calc-gutter-row + 1rem;
+}
+
+.options {
+    padding: 2rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.icon { margin-right: 2.25rem; }
+
+.github {
+    margin-bottom: 1.75rem;
+    position: relative;
+
+    &__description {
+        @include vertically-center;
+        background-color: $color-secondary-dark;
+        color: $color-primary-med;
+        left: 100%;
+        padding: .5rem;
+        visibility: hidden;
+        width: max-content;
+
+        &::before {
+            @include vertically-center;
+            content: "";
+            display: inline-block;
+            right: 100%;
+            width: 0;
+            height: 0;
+            border-top: .75rem solid transparent;
+            border-right: 1.25rem solid $color-secondary-dark;
+            border-bottom: .75rem solid transparent;
+        }
+    }
+
+    // Unhide description tag when hovering github icon.
+    &__link:hover + &__description { visibility: visible; }
+}
+
+.help {
+    position: relative;
+    // Remove triangle marker for opening details.
+    &__title::-webkit-details-marker { display: none; }
+}
+
+.shortcuts {
+    padding: 1rem;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: max-content;
+
+    &__item + &__item { margin-top: .85rem; }
+
+    &__kbd {
+        background-color: $color-grey-med;
+        padding: .25rem;
+    }
 }

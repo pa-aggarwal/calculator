@@ -14,3 +14,25 @@ body {
     &__input { font-size: $calc-font-size - .75rem; }
     &__result { font-size: $calc-font-size + .75rem; }
 }
+
+.icon {
+    color: $color-white;
+    font-size: $icon-font-size;
+}
+
+.github {
+    &__link:link,
+    &__link:visited {
+        color: $color-white;
+        text-decoration: none;
+    }
+}
+
+.help__title:hover { cursor: pointer; }
+
+.shortcuts {
+    background-color: $color-white;
+    font-size: $default-font-size - .25rem;
+
+    &__list { list-style: none; }
+}

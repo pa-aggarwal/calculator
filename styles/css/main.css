@@ -1,4 +1,8 @@
 /* stylelint-disable */
+body {
+    position: relative;
+}
+
 .content {
     display: flex;
     align-items: center;
@@ -129,10 +133,87 @@
     grid-area: subtract;
 }
 
+.options {
+    padding: 2rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.icon {
+    margin-right: 2.25rem;
+}
+
+.github {
+    margin-bottom: 1.75rem;
+    position: relative;
+}
+
+.github__description {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #5BC0BE;
+    color: #1C2541;
+    left: 100%;
+    padding: .5rem;
+    visibility: hidden;
+    width: max-content;
+}
+
+.github__description::before {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    content: "";
+    display: inline-block;
+    right: 100%;
+    width: 0;
+    height: 0;
+    border-top: .75rem solid transparent;
+    border-right: 1.25rem solid #5BC0BE;
+    border-bottom: .75rem solid transparent;
+}
+
+.github__link:hover + .github__description {
+    visibility: visible;
+}
+
+.help {
+    position: relative;
+}
+
+.help__title::-webkit-details-marker {
+    display: none;
+}
+
+.shortcuts {
+    background-color: #FFF;
+    font-size: 1.35rem;
+    padding: 1rem;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: max-content;
+}
+
+.shortcuts__list {
+    list-style: none;
+}
+
+.shortcuts__item + .shortcuts__item {
+    margin-top: .85rem;
+}
+
+.shortcuts__kbd {
+    background-color: #CFD7DE;
+    padding: .25rem;
+}
+
 body {
     background-color: #1C2541;
     font-family: 'Varela Round', sans-serif;
-    font-size: 2.5rem;
+    font-size: 1.6rem;
 }
 
 .calculator {
@@ -149,6 +230,20 @@ body {
 
 .display__result {
     font-size: 3.5rem;
+}
+
+.icon {
+    color: #FFF;
+    font-size: 3.85rem;
+}
+
+.github__link:link, .github__link:visited {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.help__title:hover {
+    cursor: pointer;
 }
 
 .calculator {

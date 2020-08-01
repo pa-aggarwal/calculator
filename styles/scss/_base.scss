@@ -1,6 +1,10 @@
 
 // stylelint-disable at-rule-no-unknown
 
+// GENERAL VARIABLES
+$default-font-size: 1.6rem;
+$icon-font-size: $default-font-size + 2.25rem;
+
 // COLOR VARIABLES
 $color-black: #000;
 $color-white: #FFF;
@@ -25,9 +29,6 @@ $calc-gutter-col: 1rem;
 $calc-font-size: 2.75rem;
 $display-padding: 1rem;
 $btn-padding-vert: 1.5rem;
-
-// GENERAL VARIABLES
-$default-font-size: 1.6rem;
 
 // MIXINS
 @mixin set-grid-areas($all-rows...) {
@@ -60,4 +61,10 @@ $default-font-size: 1.6rem;
 
 @mixin btn-shadow($offset-y: .75rem) {
     box-shadow: .3rem $offset-y .1rem $color-primary-light;
+}
+
+@mixin vertically-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
