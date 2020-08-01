@@ -7,6 +7,8 @@
         <link rel="icon" type="image/png" sizes="48x48" href="favicon.ico">
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+        <!-- Font Awesome script for icons usage -->
+        <script src="https://kit.fontawesome.com/f95d3e3dac.js" crossorigin="anonymous"></script>
         <!-- Personal Stylesheets -->
         <link rel="stylesheet" href="styles/css/reset.css">
         <link rel="stylesheet" href="styles/css/main.css">
@@ -52,6 +54,53 @@
                 </div>
             </form>
         </main>
+
+        <aside class="options">
+            <div class="github">
+                <a href="https://github.com/pa-aggarwal/calculator" target="_blank" class="github__link">
+                    <i class="icon fab fa-github"></i>
+                </a>
+                <p class="github__description">View the code</p>
+            </div>
+            <details class="help">
+                <summary class="help__title"><i class="icon fas fa-question-circle"></i></summary>
+                <div class="shortcuts">
+                    <ul class="shortcuts__list">
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">Shift</kbd> + <kbd class="shortcuts__kbd">C</kbd> to reset
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">Enter</kbd>/<kbd class="shortcuts__kbd">=</kbd> to enter
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">Backspace</kbd> to undo
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">Shift</kbd> + <kbd class="shortcuts__kbd">A</kbd> for last answer
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">.</kbd> to enter decimal
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">Shift</kbd> + <kbd class="shortcuts__kbd">S</kbd> to change number sign
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">(</kbd> and <kbd class="shortcuts__kbd">)</kbd> to enter brackets
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">0-9</kbd> to enter numbers
+                        </li>
+                        <li class="shortcuts__item">
+                            <kbd class="shortcuts__kbd">+</kbd>, <kbd class="shortcuts__kbd">-</kbd>, <kbd class="shortcuts__kbd">*</kbd>, <kbd class="shortcuts__kbd">/</kbd>, <kbd class="shortcuts__kbd">^</kbd> to enter operators
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        </aside>
+
+        <footer class="footer">
+            <small class="footer__copyright">Copyright &copy; 2020 Priya Aggarwal</small>
+        </footer>
 
         <script src="scripts/main.js" type="module" charset="utf-8"></script>
     </body>
