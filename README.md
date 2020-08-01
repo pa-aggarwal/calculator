@@ -13,7 +13,7 @@ Recorded using [ScreenToGif](https://www.screentogif.com/).
 * Options to __clear__ the display, __undo__ last entry, and get the last calculation's result.
 * Keyboard usage for entering options/numbers/operators.
 
-See the keyboard shortcuts by clicking on the question mark in the page's top right corner.
+See the keyboard shortcuts by clicking on the question mark in the page's top left corner.
 
 ## Launch
 
