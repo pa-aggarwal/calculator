@@ -57,3 +57,11 @@
         &[name="exponent"] { padding: $btn-padding-vert - .5rem 0; }
     }
 }
+
+.footer {
+    background-color: $color-grey-med;
+    color: $color-primary-med;
+    text-align: center;
+    padding: 2.5rem 0;
+    margin-top: 2rem;
+}

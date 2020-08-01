@@ -188,17 +188,11 @@ body {
 }
 
 .shortcuts {
-    background-color: #FFF;
-    font-size: 1.35rem;
     padding: 1rem;
     position: absolute;
     top: 0;
     left: 100%;
     width: max-content;
-}
-
-.shortcuts__list {
-    list-style: none;
 }
 
 .shortcuts__item + .shortcuts__item {
@@ -244,6 +238,15 @@ body {
 
 .help__title:hover {
     cursor: pointer;
+}
+
+.shortcuts {
+    background-color: #FFF;
+    font-size: 1.35rem;
+}
+
+.shortcuts__list {
+    list-style: none;
 }
 
 .calculator {
@@ -324,4 +327,13 @@ body {
 
 .calc-button--operator[name="exponent"] {
     padding: 1rem 0;
+}
+
+.footer {
+    background-color: #93a5b4;
+    background-color: #CFD7DE;
+    color: #1C2541;
+    text-align: center;
+    padding: 2.5rem 0;
+    margin-top: 2rem;
 }
